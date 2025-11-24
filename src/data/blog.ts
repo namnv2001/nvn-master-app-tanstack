@@ -2,18 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 
 import matter from 'gray-matter'
 
-type Blog = {
-  title: string
-  date: string
-  lastModified: string
-  tags: Array<string>
-  draft: boolean
-  summary: string
-  images: Array<string>
-  slug: string
-  authors?: Array<string>
-  content?: string
-}
+import type { Blog } from '@/types'
 
 // Import all markdown files at build time using Vite's glob
 const blogModules = import.meta.glob<string>('../data/blogs/*.md', {
