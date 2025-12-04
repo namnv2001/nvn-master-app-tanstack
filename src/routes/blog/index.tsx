@@ -1,6 +1,13 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 
-import Card from '@/components/Card'
+import { Image } from '@/components/Image'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { getAllBlogs } from '@/data/blog'
 import { formatDate } from '@/helpers'
 
@@ -19,25 +26,29 @@ function BlogList() {
       {allBlogs.map((blog) => (
         <Card key={blog.title + blog.date}>
           <Link to="/blog/$blogId" params={{ blogId: blog.slug }}>
-            <img
-              src={blog.images[0]}
-              alt={blog.title}
-              className="w-full h-40 object-cover rounded-lg"
-            />
-            <h2 className="text-lg font-bold">{blog.title}</h2>
-            <div className="flex gap-2 mt-4">
-              <span className="text-sm text-gray-500">
-                {formatDate(blog.date)} •
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {blog.tags.map((tag) => (
-                  <span key={tag} className="text-sm text-gray-500">
-                    {tag}
-                  </span>
-                ))}
+            <CardHeader>
+              <Image
+                src={blog.images[0]}
+                alt={blog.title}
+                className="w-full h-40 object-cover rounded-lg"
+              />
+              <CardTitle>{blog.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="mt-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">
+                  {formatDate(blog.date)} •
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {blog.tags.map((tag) => (
+                    <span key={tag} className="text-sm text-gray-500">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-            <p className="text-sm text-gray-500 mt-2">{blog.summary}</p>
+              <CardDescription>{blog.summary}</CardDescription>
+            </CardContent>
           </Link>
         </Card>
       ))}
