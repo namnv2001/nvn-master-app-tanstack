@@ -1,6 +1,7 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 
 import { Image } from '@/components/Image'
+import { Badge } from '@/components/ui/badge'
 import {
   Card,
   CardContent,
@@ -22,36 +23,73 @@ function BlogList() {
   const allBlogs = Route.useLoaderData()
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-      {allBlogs.map((blog) => (
-        <Card key={blog.title + blog.date}>
-          <Link to="/blog/$blogId" params={{ blogId: blog.slug }}>
-            <CardHeader>
-              <Image
-                src={blog.images[0]}
-                alt={blog.title}
-                className="w-full h-40 object-cover rounded-lg"
-              />
-              <CardTitle>{blog.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="mt-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">
-                  {formatDate(blog.date)} •
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {blog.tags.map((tag) => (
-                    <span key={tag} className="text-sm text-gray-500">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <CardDescription>{blog.summary}</CardDescription>
-            </CardContent>
-          </Link>
-        </Card>
-      ))}
+    <div className="container mx-auto px-4 py-8 md:py-12">
+      <div className="mb-8 md:mb-12">
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">
+          Blog
+        </h1>
+        <p className="text-muted-foreground text-lg">
+          Discover my latest articles and insights
+        </p>
+      </div>
+
+      {allBlogs.length === 0 ? (
+        <div className="text-center py-16">
+          <p className="text-muted-foreground text-lg">No blog posts yet.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {allBlogs.map((blog) => (
+            <Link
+              key={blog.title + blog.date}
+              to="/blog/$blogId"
+              params={{ blogId: blog.slug }}
+              className="group"
+            >
+              <Card className="h-full overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border-border/50 hover:border-border">
+                <CardHeader className="p-0">
+                  <div className="relative overflow-hidden aspect-video bg-muted">
+                    <Image
+                      src={blog.images[0]}
+                      alt={blog.title}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                  <div className="px-6 pt-6">
+                    <CardTitle className="text-xl mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      {blog.title}
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="px-6 pb-6 flex flex-col gap-4">
+                  <CardDescription className="line-clamp-3 text-sm leading-relaxed">
+                    {blog.summary}
+                  </CardDescription>
+                  <div className="flex flex-col gap-3 mt-auto">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <time dateTime={blog.date}>{formatDate(blog.date)}</time>
+                    </div>
+                    {blog.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {blog.tags.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant="secondary"
+                            className="text-xs font-medium"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
