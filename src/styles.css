@@ -136,3 +136,7 @@ code {
     @apply bg-background text-foreground;
   }
 }
+
+pre:has(> code) > code {
+  @apply block px-4 overflow-x-auto;
+}
