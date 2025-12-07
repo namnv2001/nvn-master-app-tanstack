@@ -95,11 +95,7 @@ function RouteComponent() {
         {blog.tags.length > 0 ? (
           <div className="flex flex-wrap gap-2 mt-6">
             {blog.tags.map((tag) => (
-              <Badge
-                key={tag}
-                variant="secondary"
-                className="text-sm font-medium"
-              >
+              <Badge key={tag} variant="secondary">
                 {tag}
               </Badge>
             ))}
@@ -121,7 +117,8 @@ function RouteComponent() {
             a: ({ node, ...props }) => (
               <Link
                 to={props.href}
-                className="text-primary hover:underline underline-offset-4"
+                target="_blank"
+                className="text-link hover:underline underline-offset-4"
                 {...props}
               />
             ),

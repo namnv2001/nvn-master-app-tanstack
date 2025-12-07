@@ -73,11 +73,7 @@ function BlogList() {
                     {blog.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2">
                         {blog.tags.map((tag) => (
-                          <Badge
-                            key={tag}
-                            variant="secondary"
-                            className="text-xs font-medium"
-                          >
+                          <Badge key={tag} variant="secondary">
                             {tag}
                           </Badge>
                         ))}
