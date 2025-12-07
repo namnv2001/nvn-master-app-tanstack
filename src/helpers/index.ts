@@ -5,3 +5,10 @@ export const formatDate = (date: string) => {
     day: 'numeric',
   })
 }
+
+export const calculateReadingTime = (content: string): number => {
+  const wordsPerMinute = 200
+  const text = content.replace(/<[^>]*>/g, '')
+  const wordCount = text.trim().split(/\s+/).length
+  return Math.ceil(wordCount / wordsPerMinute)
+}
