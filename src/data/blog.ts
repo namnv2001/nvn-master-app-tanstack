@@ -2,17 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 
 import matter from 'gray-matter'
 
-type Blog = {
-  title: string
-  date: string
-  lastModified: string
-  tags: Array<string>
-  draft: boolean
-  summary: string
-  images: Array<string>
-  authors?: Array<string>
-  content?: string
-}
+import type { Blog } from '@/types'
 
 // Import all markdown files at build time using Vite's glob
 const blogModules = import.meta.glob<string>('../data/blogs/*.md', {
@@ -21,7 +11,7 @@ const blogModules = import.meta.glob<string>('../data/blogs/*.md', {
   eager: true,
 })
 
-const buildBlog = (rawContent: string): Blog => {
+const buildBlog = (rawContent: string, slug: string): Blog => {
   const { data: parsed, content } = matter(rawContent)
 
   const result: Blog = {
@@ -32,6 +22,7 @@ const buildBlog = (rawContent: string): Blog => {
     draft: parsed.draft ?? false,
     summary: parsed.summary || '',
     images: parsed.images || [],
+    slug,
     authors: parsed.authors || [],
     content: content,
   }
@@ -43,8 +34,9 @@ export const getAllBlogs = createServerFn({
 }).handler((): Promise<Array<Blog>> => {
   const blogs: Array<Blog> = []
 
-  for (const [, rawContent] of Object.entries(blogModules)) {
-    const blog = buildBlog(rawContent)
+  for (const [key, rawContent] of Object.entries(blogModules)) {
+    const slug = key.replace('./blogs/', '').replace('.md', '')
+    const blog = buildBlog(rawContent, slug)
     if (!blog.draft) blogs.push(blog)
   }
 
@@ -56,10 +48,10 @@ export const getAllBlogs = createServerFn({
 
 export const getBlogBySlug = createServerFn({ method: 'POST' })
   .inputValidator((d: string) => d)
-  .handler(async ({ data }) => {
+  .handler(async ({ data }): Promise<Blog> => {
     const rawContent = blogModules[`./blogs/${data}.md`]
     if (!rawContent) {
       return Promise.reject(new Error(`Blog with slug "${data}" not found`))
     }
-    return Promise.resolve(buildBlog(rawContent))
+    return Promise.resolve(buildBlog(rawContent, data))
   })
