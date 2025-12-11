@@ -28,7 +28,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'namnv2001',
       },
     ],
     links: [
@@ -47,12 +47,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="min-h-screen bg-background">
         <Header />
-        <div className="bg-white w-full">
-          <div className="container mx-auto px-4 py-8 min-h-screen">
-            {children}
-          </div>
+        <div className="w-full">
+          <div className="container mx-auto px-4 py-8">{children}</div>
           <Footer />
         </div>
         <TanStackDevtools

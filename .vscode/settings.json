@@ -9,7 +9,4 @@
     "**/routeTree.gen.ts": true
   },
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit"
-  }
 }

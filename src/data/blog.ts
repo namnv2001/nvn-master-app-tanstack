@@ -2,6 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 
 import matter from 'gray-matter'
 
+import * as z from 'zod'
 import type { Blog } from '@/types'
 
 // Import all markdown files at build time using Vite's glob
@@ -46,8 +47,8 @@ export const getAllBlogs = createServerFn({
   return Promise.resolve(blogs)
 })
 
-export const getBlogBySlug = createServerFn({ method: 'POST' })
-  .inputValidator((d: string) => d)
+export const getBlogBySlug = createServerFn({ method: 'GET' })
+  .inputValidator(z.string().min(1))
   .handler(async ({ data }): Promise<Blog> => {
     const rawContent = blogModules[`./blogs/${data}.md`]
     if (!rawContent) {
