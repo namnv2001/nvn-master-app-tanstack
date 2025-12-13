@@ -1,72 +1,50 @@
 import { Link } from '@tanstack/react-router'
 
-import { BookOpen, Home, Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from './ui/navigation-menu'
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false)
+  const navItems = [
+    {
+      label: 'Home',
+      to: '/',
+    },
+    {
+      label: 'About',
+      to: '/about',
+    },
+    {
+      label: 'Blog',
+      to: '/blog',
+    },
+  ]
+
+  const renderNavItems = () => {
+    return navItems.map((item) => (
+      <NavigationMenuItem key={item.label}>
+        <NavigationMenuLink asChild>
+          <Link
+            to={item.to}
+            className="text-neutral-200 hover:text-foreground transition-colors font-bold"
+          >
+            {item.label}
+          </Link>
+        </NavigationMenuLink>
+      </NavigationMenuItem>
+    ))
+  }
 
   return (
-    <>
-      <header className="p-4 flex items-center bg-gray-800 text-white shadow-lg justify-between">
-        <h1 className="ml-4 text-xl font-semibold">
-          <Link to="/">
-            <img
-              src="/tanstack-word-logo-white.svg"
-              alt="TanStack Logo"
-              className="h-10"
-            />
-          </Link>
-        </h1>
-        <button
-          onClick={() => setIsOpen(true)}
-          className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-          aria-label="Open menu"
-        >
-          <Menu size={24} />
-        </button>
-      </header>
-
-      <aside
-        className={`fixed top-0 right-0 h-full w-80 bg-gray-900 text-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          <h2 className="text-xl font-bold">Navigation</h2>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
-            aria-label="Close menu"
-          >
-            <X size={24} />
-          </button>
-        </div>
-
-        <nav className="flex-1 p-4 overflow-y-auto">
-          <Link
-            to="/"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
-            activeProps={{
-              className:
-                'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
-            }}
-          >
-            <Home size={20} />
-            <span className="font-medium">Home</span>
-          </Link>
-
-          <Link
-            to="/blog"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
-          >
-            <BookOpen size={20} />
-            <span className="font-medium">Blog</span>
-          </Link>
-        </nav>
-      </aside>
-    </>
+    <NavigationMenu className="sticky top-0 z-50 w-full bg-nav-background">
+      <div className="container max-w-5xl mx-auto px-4 py-2 md:py-4 flex items-center justify-end">
+        <NavigationMenuList className="flex justify-between gap-4">
+          {renderNavItems()}
+        </NavigationMenuList>
+      </div>
+    </NavigationMenu>
   )
 }

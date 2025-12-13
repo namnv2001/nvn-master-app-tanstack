@@ -24,7 +24,7 @@ function BlogList() {
   const allBlogs = Route.useLoaderData()
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12">
+    <>
       {allBlogs.length > 0 && (
         <div className="mb-8 md:mb-12">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">
@@ -95,6 +95,6 @@ function BlogList() {
           ))}
         </div>
       )}
-    </div>
+    </>
   )
 }

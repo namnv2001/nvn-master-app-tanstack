@@ -50,7 +50,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="min-h-screen bg-background">
         <Header />
         <div className="w-full">
-          <div className="container mx-auto px-4 py-8">{children}</div>
+          <div className="container max-w-5xl mx-auto px-4 py-8">
+            {children}
+          </div>
           <Footer />
         </div>
         <TanStackDevtools
