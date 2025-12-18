@@ -20,7 +20,7 @@ function RouteComponent() {
   const readingTime = blog.content ? calculateReadingTime(blog.content) : 0
 
   return (
-    <article className="max-w-4xl mx-auto px-4 py-8 md:py-12">
+    <article className="py-8 md:py-12">
       {/* Navigation */}
       <nav className="mb-8">
         <div className="flex items-center gap-4 mb-4">

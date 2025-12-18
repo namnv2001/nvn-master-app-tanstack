@@ -1,72 +1,131 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
+import { List, ListXIcon } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from './ui/navigation-menu'
 
-import { BookOpen, Home, Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { cn } from '@/lib/utils'
+
+const MOBILE_WIDTH = 950
 
 export default function Header() {
+  const { pathname } = useLocation()
+
   const [isOpen, setIsOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [activeItem, setActiveItem] = useState('')
+  const mobileMenuRef = useRef<HTMLDivElement | null>(null)
+
+  const navItems = [
+    {
+      label: 'Home',
+      to: '/',
+    },
+    {
+      label: 'About',
+      to: '/about',
+    },
+    {
+      label: 'Blog',
+      to: '/blog',
+    },
+  ]
+
+  useEffect(() => {
+    setActiveItem(pathname)
+  }, [pathname])
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < MOBILE_WIDTH)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  useEffect(() => {
+    if (!isMobile || !isOpen) {
+      return
+    }
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isMobile, isOpen])
+
+  const renderNavItems = (onItemClick?: () => void) => {
+    return navItems.map((item) => (
+      <NavigationMenuItem key={item.label}>
+        <NavigationMenuLink asChild onClick={onItemClick}>
+          <Link
+            to={item.to}
+            className={cn(
+              'text-neutral-200 transition-colors',
+              activeItem === item.to && 'font-bold',
+            )}
+          >
+            {item.label}
+          </Link>
+        </NavigationMenuLink>
+      </NavigationMenuItem>
+    ))
+  }
 
   return (
-    <>
-      <header className="p-4 flex items-center bg-gray-800 text-white shadow-lg justify-between">
-        <h1 className="ml-4 text-xl font-semibold">
-          <Link to="/">
-            <img
-              src="/tanstack-word-logo-white.svg"
-              alt="TanStack Logo"
-              className="h-10"
-            />
-          </Link>
-        </h1>
-        <button
-          onClick={() => setIsOpen(true)}
-          className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-          aria-label="Open menu"
+    <NavigationMenu
+      className={cn(
+        'sticky top-0 z-50 w-full bg-nav-background',
+        isOpen && 'bg-nav-background-open',
+      )}
+    >
+      <div className="container max-w-5xl mx-auto px-4 py-4 flex items-center justify-end relative">
+        <NavigationMenuList
+          className={cn('flex justify-between gap-4', isMobile && 'hidden')}
         >
-          <Menu size={24} />
-        </button>
-      </header>
+          {renderNavItems()}
+        </NavigationMenuList>
 
-      <aside
-        className={`fixed top-0 right-0 h-full w-80 bg-gray-900 text-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          <h2 className="text-xl font-bold">Navigation</h2>
+        {/* Mobile menu trigger */}
+        <div className={cn('ml-auto text-neutral-200', !isMobile && 'hidden')}>
           <button
-            onClick={() => setIsOpen(false)}
-            className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
-            aria-label="Close menu"
+            type="button"
+            className="inline-flex items-center justify-center rounded-md p-2 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-500"
+            onClick={() => setIsOpen(!isOpen)}
           >
-            <X size={24} />
+            {isOpen ? (
+              <ListXIcon className="size-7" />
+            ) : (
+              <List className="size-7" />
+            )}
           </button>
         </div>
 
-        <nav className="flex-1 p-4 overflow-y-auto">
-          <Link
-            to="/"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
-            activeProps={{
-              className:
-                'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
-            }}
+        {/* Mobile menu content */}
+        {isMobile && isOpen && (
+          <div
+            ref={mobileMenuRef}
+            className="absolute inset-x-0 top-full bg-nav-background-open/95 shadow-lg backdrop-blur list-none"
           >
-            <Home size={20} />
-            <span className="font-medium">Home</span>
-          </Link>
-
-          <Link
-            to="/blog"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
-          >
-            <BookOpen size={20} />
-            <span className="font-medium">Blog</span>
-          </Link>
-        </nav>
-      </aside>
-    </>
+            <div className="flex flex-col gap-2 px-4 py-4">
+              {renderNavItems(() => setIsOpen(false))}
+            </div>
+          </div>
+        )}
+      </div>
+    </NavigationMenu>
   )
 }

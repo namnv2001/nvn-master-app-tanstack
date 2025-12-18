@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Empty, EmptyDescription, EmptyTitle } from '@/components/ui/empty'
 import { getAllBlogs } from '@/data/blog'
 import { formatDate } from '@/helpers'
 
@@ -23,19 +24,27 @@ function BlogList() {
   const allBlogs = Route.useLoaderData()
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12">
-      <div className="mb-8 md:mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">
-          Blog
-        </h1>
-        <p className="text-muted-foreground text-lg">
-          Discover my latest articles and insights
-        </p>
-      </div>
+    <>
+      {allBlogs.length > 0 && (
+        <div className="mb-8 md:mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">
+            Blog
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Discover my latest articles and insights
+          </p>
+        </div>
+      )}
 
       {allBlogs.length === 0 ? (
         <div className="text-center py-16">
-          <p className="text-muted-foreground text-lg">No blog posts yet.</p>
+          <Empty>
+            <EmptyTitle>No blog posts found</EmptyTitle>
+            <EmptyDescription>
+              Oh no! The author is too lazy to write any blog posts yet. Please
+              come back later.
+            </EmptyDescription>
+          </Empty>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -86,6 +95,6 @@ function BlogList() {
           ))}
         </div>
       )}
-    </div>
+    </>
   )
 }
