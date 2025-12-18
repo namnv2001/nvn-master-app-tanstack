@@ -1,6 +1,7 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
+import { useEffect } from 'react'
 
-import { ArrowLeft, Calendar, Clock, User } from 'lucide-react'
+import { ArrowLeft, ArrowUp, Calendar, Clock, User } from 'lucide-react'
 import Markdown from 'react-markdown'
 import remarkBreaks from 'remark-breaks'
 import remarkGfm from 'remark-gfm'
@@ -17,7 +18,13 @@ export const Route = createFileRoute('/blog/$blogId')({
 
 function RouteComponent() {
   const blog = Route.useLoaderData()
+  const { isClient } = Route.useRouteContext()
+
   const readingTime = blog.content ? calculateReadingTime(blog.content) : 0
+
+  useEffect(() => {
+    if (isClient) window.scrollTo(0, 0)
+  }, [])
 
   return (
     <article className="py-8 md:py-12">
@@ -222,6 +229,17 @@ function RouteComponent() {
           }}
         />
       </div>
+
+      <button
+        type="button"
+        onClick={() => {
+          if (isClient) window.scrollTo({ top: 0, behavior: 'smooth' })
+        }}
+        className="fixed right-4 bottom-4 z-40 inline-flex items-center justify-center rounded-full bg-primary/70 text-primary-foreground shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background h-12 w-12 cursor-pointer"
+        aria-label="Back to top"
+      >
+        <ArrowUp size={20} />
+      </button>
     </article>
   )
 }

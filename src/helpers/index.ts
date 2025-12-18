@@ -12,3 +12,5 @@ export const calculateReadingTime = (content: string): number => {
   const wordCount = text.trim().split(/\s+/).length
   return Math.ceil(wordCount / wordsPerMinute)
 }
+
+export const isClient = () => typeof window !== 'undefined'
