@@ -1,5 +1,5 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { ArrowUp, Calendar, Clock, User } from 'lucide-react'
 import Markdown from 'react-markdown'
@@ -8,8 +8,21 @@ import remarkGfm from 'remark-gfm'
 
 import { Image } from '@/components/Image'
 import { Badge } from '@/components/ui/badge'
-import { getBlogBySlug } from '@/data/blog'
-import { calculateReadingTime, formatDate } from '@/helpers'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { getAllBlogs, getBlogBySlug } from '@/data/blog'
+import {
+  calculateReadingTime,
+  formatDate,
+  isBlogRead,
+  markBlogAsRead,
+} from '@/helpers'
+import { BlogCard } from '@/components/BlogCard'
 
 export const Route = createFileRoute('/blog/$blogId')({
   component: RouteComponent,
@@ -19,12 +32,60 @@ export const Route = createFileRoute('/blog/$blogId')({
 function RouteComponent() {
   const blog = Route.useLoaderData()
   const { isClient } = Route.useRouteContext()
+  const [otherBlogs, setOtherBlogs] = useState<
+    Awaited<ReturnType<typeof getAllBlogs>>
+  >([])
+  const hasMarkedAsRead = useRef(false)
 
   const readingTime = blog.content ? calculateReadingTime(blog.content) : 0
 
+  // scroll to top when component mounts or open other blog
   useEffect(() => {
     if (isClient) window.scrollTo(0, 0)
-  }, [])
+  }, [blog.slug])
+
+  // Fetch other blogs for "Keep reading" section
+  useEffect(() => {
+    if (isClient) {
+      getAllBlogs().then((blogs) => {
+        const filtered = blogs.filter((b) => b.slug !== blog.slug).slice(0, 4)
+        setOtherBlogs(filtered)
+      })
+    }
+  }, [blog.slug, isClient])
+
+  // Read status tracking
+  useEffect(() => {
+    if (!isClient || hasMarkedAsRead.current) return
+
+    // Mark as read after 30 seconds
+    const timer = setTimeout(() => {
+      if (!hasMarkedAsRead.current) {
+        markBlogAsRead(blog.slug)
+        hasMarkedAsRead.current = true
+      }
+    }, 30000)
+
+    // Mark as read when user scrolls to bottom
+    const scrollHandler = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      const scrollHeight = document.documentElement.scrollHeight
+      const clientHeight = document.documentElement.clientHeight
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 100
+
+      if (isAtBottom && !hasMarkedAsRead.current) {
+        markBlogAsRead(blog.slug)
+        hasMarkedAsRead.current = true
+      }
+    }
+
+    window.addEventListener('scroll', scrollHandler)
+
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('scroll', scrollHandler)
+    }
+  }, [blog.slug, isClient])
 
   return (
     <article>
@@ -93,7 +154,7 @@ function RouteComponent() {
       </header>
 
       {/* Content */}
-      <div className="prose prose-lg dark:prose-invert max-w-none">
+      <div className="prose prose-lg dark:prose-invert max-w-none border-b border-border pb-6">
         <Markdown
           children={blog.content || ''}
           remarkPlugins={[remarkGfm, remarkBreaks]}
@@ -211,6 +272,22 @@ function RouteComponent() {
           }}
         />
       </div>
+
+      {/* Keep Reading Section */}
+      {otherBlogs.length > 0 && (
+        <section className="mt-16">
+          <h2 className="text-3xl font-bold mb-8">Keep reading</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8">
+            {otherBlogs.map((otherBlog) => (
+              <BlogCard
+                key={otherBlog.slug}
+                blog={otherBlog}
+                isRead={isBlogRead(otherBlog.slug)}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       <button
         type="button"
