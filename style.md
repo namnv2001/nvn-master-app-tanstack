@@ -4,9 +4,117 @@ This document outlines common style rules and patterns used throughout the appli
 
 ## Color System
 
+### Color Palette
+
+The application uses the **Chakra UI** color palette as the foundation for all colors. The palette includes 10 hues, each with 10 tones (50-900):
+
+#### Available Hues
+
+- **Gray**: Neutral grays for backgrounds, borders, and text
+- **Red**: Destructive actions and errors
+- **Orange**: Warning states
+- **Yellow**: Caution states
+- **Green**: Success states
+- **Teal**: Accent colors
+- **Cyan**: Accent colors
+- **Blue**: Primary actions and links
+- **Purple**: Accent colors
+- **Pink**: Accent colors
+
+#### Color Tones
+
+Each hue has 10 tones from lightest to darkest:
+- `50`: Lightest shade (backgrounds)
+- `100-200`: Very light (muted backgrounds)
+- `300-400`: Light (borders, secondary elements)
+- `500-600`: Medium (primary actions, links)
+- `700-800`: Dark (hover states, emphasis)
+- `900`: Darkest shade (text, foregrounds)
+
+#### Chakra UI Color Palette
+
+```json
+{
+  "name": "Chakra UI",
+  "hues": [
+    {
+      "name": "Gray",
+      "colors": [
+        "#f7fafc", "#edf2f7", "#e2e8f0", "#cbd5e0", "#a0aec0",
+        "#718096", "#4a5568", "#2d3748", "#1a202c", "#171923"
+      ]
+    },
+    {
+      "name": "Red",
+      "colors": [
+        "#fff5f5", "#fed7d7", "#feb2b2", "#fc8181", "#f56565",
+        "#e53e3e", "#c53030", "#9b2c2c", "#822727", "#63171b"
+      ]
+    },
+    {
+      "name": "Orange",
+      "colors": [
+        "#fffaf0", "#feebc8", "#fbd38d", "#f6ad55", "#ed8936",
+        "#dd6b20", "#c05621", "#9c4221", "#7b341e", "#652b19"
+      ]
+    },
+    {
+      "name": "Yellow",
+      "colors": [
+        "#fffff0", "#fefcbf", "#faf089", "#f6e05e", "#ecc94b",
+        "#d69e2e", "#b7791f", "#975a16", "#744210", "#5f370e"
+      ]
+    },
+    {
+      "name": "Green",
+      "colors": [
+        "#f0fff4", "#c6f6d5", "#9ae6b4", "#68d391", "#48bb78",
+        "#38a169", "#2f855a", "#276749", "#22543d", "#1c4532"
+      ]
+    },
+    {
+      "name": "Teal",
+      "colors": [
+        "#e6fffa", "#b2f5ea", "#81e6d9", "#4fd1c5", "#38b2ac",
+        "#319795", "#2c7a7b", "#285e61", "#234e52", "#1d4044"
+      ]
+    },
+    {
+      "name": "Cyan",
+      "colors": [
+        "#edfdfd", "#c4f1f9", "#9decf9", "#76e4f7", "#0bc5ea",
+        "#00b5d8", "#00a3c4", "#0987a0", "#086f83", "#065666"
+      ]
+    },
+    {
+      "name": "Blue",
+      "colors": [
+        "#ebf8ff", "#bee3f8", "#90cdf4", "#63b3ed", "#4299e1",
+        "#3182ce", "#2b6cb0", "#2c5282", "#2a4365", "#1a365d"
+      ]
+    },
+    {
+      "name": "Purple",
+      "colors": [
+        "#faf5ff", "#e9d8fd", "#d6bcfa", "#b794f4", "#9f7aea",
+        "#805ad5", "#6b46c1", "#553c9a", "#44337a", "#322659"
+      ]
+    },
+    {
+      "name": "Pink",
+      "colors": [
+        "#fff5f7", "#fed7e2", "#fbb6ce", "#f687b3", "#ed64a6",
+        "#d53f8c", "#b83280", "#97266d", "#702459", "#521b41"
+      ]
+    }
+  ],
+  "tones": ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"]
+}
+```
+
 ### CSS Variables
 
-The application uses CSS variables defined in `styles.css` for consistent theming. All colors use the `oklch` color space.
+The application uses CSS variables defined in `styles.css` for consistent theming. All colors use the `oklch` color space and are based on the Chakra UI palette.
 
 #### Light Mode Colors
 
@@ -103,7 +211,7 @@ Colors are accessible via Tailwind classes:
 
 ### Common Usage
 
-- Cards: `rounded-xl`
+- Cards: `rounded-3xl` (base), `rounded-xl` (alternative)
 - Buttons/Badges: `rounded-full` or `rounded-lg`
 - Images: `rounded-xl` or `rounded-2xl`
 - Code blocks: `rounded-xl`
@@ -112,10 +220,17 @@ Colors are accessible via Tailwind classes:
 
 ### Cards
 
+Base card pattern:
 ```tsx
 className =
-  'bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm'
+  'bg-card text-card-foreground flex flex-col gap-6 rounded-3xl border py-6 shadow-sm'
 ```
+
+Interactive card patterns:
+- Hover effects: `hover:shadow-lg hover:-translate-y-1 transition-all duration-300`
+- Border transitions: `border-border/50 hover:border-border`
+- Full height: `h-full` for equal-height cards in grids
+- Overflow: `overflow-hidden` for contained content
 
 ### Badges
 
@@ -139,6 +254,9 @@ className =
 - Full width: `w-full h-auto`
 - Cover: `w-full h-full object-cover`
 - Container: `rounded-xl overflow-hidden`
+- Aspect ratio: `aspect-video` for 16:9 ratio
+- Hover effects: `group-hover:scale-105 transition-transform duration-300`
+- Gradient overlays: `bg-gradient-to-t from-black/60 via-black/0 to-black/0` with `absolute inset-0`
 
 ## Layout Patterns
 
@@ -155,8 +273,12 @@ className =
 
 ### Grid
 
-- Use Tailwind grid utilities as needed
+Common grid patterns:
+- Responsive columns: `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8`
+- Auto rows: `grid auto-rows-min grid-rows-[auto_auto]`
+- Grid positioning: `col-start-2 row-span-2 row-start-1 self-start justify-self-end`
 - Container queries: `@container/card-header` for responsive grids
+- Conditional grid columns: `has-data-[slot=card-action]:grid-cols-[1fr_auto]`
 
 ## Dark Mode
 
@@ -189,14 +311,23 @@ className =
 ### Common Patterns
 
 - Colors: `transition-colors`
-- Transforms: `transition-transform duration-300 ease-in-out`
+- Transforms: `transition-transform duration-300`
+- All properties: `transition-all duration-300`
+- Opacity: `transition-opacity duration-300`
 - Always include transitions for interactive elements
+
+### Group Hover Patterns
+
+When using `group` class on parent, child elements can respond:
+- Text color: `group-hover:text-primary`
+- Scale: `group-hover:scale-105`
+- Opacity: `group-hover:opacity-100` (with initial `opacity-0`)
 
 ## Shadows
 
 ### Usage
 
-- Cards: `shadow-sm`
+- Cards: `shadow-sm` (base), `hover:shadow-lg` (interactive)
 - Sidebar/Modals: `shadow-2xl`
 - Headers: `shadow-lg`
 
@@ -207,6 +338,10 @@ className =
 - `cn()`: Use for conditional class merging (from `@/lib/utils`)
 - `data-slot`: Used for component identification and styling
 - Focus states: Always include accessible focus indicators
+- Line clamping: `line-clamp-2`, `line-clamp-3` for text truncation
+- Negative margins: `-mx-4`, `-my-4` for overlapping elements
+- Color opacity: `border-border/50` for semi-transparent borders
+- Arbitrary selectors: `[.border-b]:pb-6`, `[.border-t]:pt-6` for conditional styling
 
 ## Best Practices
 

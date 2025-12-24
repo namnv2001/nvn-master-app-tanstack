@@ -1,14 +1,28 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
+import { useEffect, useRef, useState } from 'react'
 
-import { ArrowLeft, Calendar, Clock, User } from 'lucide-react'
+import { ArrowUp, Calendar, Clock, User } from 'lucide-react'
 import Markdown from 'react-markdown'
 import remarkBreaks from 'remark-breaks'
 import remarkGfm from 'remark-gfm'
 
 import { Image } from '@/components/Image'
 import { Badge } from '@/components/ui/badge'
-import { getBlogBySlug } from '@/data/blog'
-import { calculateReadingTime, formatDate } from '@/helpers'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { getAllBlogs, getBlogBySlug } from '@/data/blog'
+import {
+  calculateReadingTime,
+  formatDate,
+  isBlogRead,
+  markBlogAsRead,
+} from '@/helpers'
+import { BlogCard } from '@/components/BlogCard'
 
 export const Route = createFileRoute('/blog/$blogId')({
   component: RouteComponent,
@@ -17,34 +31,64 @@ export const Route = createFileRoute('/blog/$blogId')({
 
 function RouteComponent() {
   const blog = Route.useLoaderData()
+  const { isClient } = Route.useRouteContext()
+  const [otherBlogs, setOtherBlogs] = useState<
+    Awaited<ReturnType<typeof getAllBlogs>>
+  >([])
+  const hasMarkedAsRead = useRef(false)
+
   const readingTime = blog.content ? calculateReadingTime(blog.content) : 0
 
-  return (
-    <article className="py-8 md:py-12">
-      {/* Navigation */}
-      <nav className="mb-8">
-        <div className="flex items-center gap-4 mb-4">
-          <Link
-            to="/blog"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft size={18} />
-            <span>Back to Blog</span>
-          </Link>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Link to="/" className="hover:text-foreground transition-colors">
-            Home
-          </Link>
-          <span>/</span>
-          <Link to="/blog" className="hover:text-foreground transition-colors">
-            Blog
-          </Link>
-          <span>/</span>
-          <span className="text-foreground">{blog.title}</span>
-        </div>
-      </nav>
+  // scroll to top when component mounts or open other blog
+  useEffect(() => {
+    if (isClient) window.scrollTo(0, 0)
+  }, [blog.slug])
 
+  // Fetch other blogs for "Keep reading" section
+  useEffect(() => {
+    if (isClient) {
+      getAllBlogs().then((blogs) => {
+        const filtered = blogs.filter((b) => b.slug !== blog.slug).slice(0, 4)
+        setOtherBlogs(filtered)
+      })
+    }
+  }, [blog.slug, isClient])
+
+  // Read status tracking
+  useEffect(() => {
+    if (!isClient || hasMarkedAsRead.current) return
+
+    // Mark as read after 30 seconds
+    const timer = setTimeout(() => {
+      if (!hasMarkedAsRead.current) {
+        markBlogAsRead(blog.slug)
+        hasMarkedAsRead.current = true
+      }
+    }, 30000)
+
+    // Mark as read when user scrolls to bottom
+    const scrollHandler = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      const scrollHeight = document.documentElement.scrollHeight
+      const clientHeight = document.documentElement.clientHeight
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 100
+
+      if (isAtBottom && !hasMarkedAsRead.current) {
+        markBlogAsRead(blog.slug)
+        hasMarkedAsRead.current = true
+      }
+    }
+
+    window.addEventListener('scroll', scrollHandler)
+
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('scroll', scrollHandler)
+    }
+  }, [blog.slug, isClient])
+
+  return (
+    <article>
       {/* Header Section */}
       <header className="mb-12">
         {/* Hero Image */}
@@ -60,7 +104,7 @@ function RouteComponent() {
         )}
 
         {/* Title */}
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight text-center">
           {blog.title}
         </h1>
 
@@ -71,40 +115,46 @@ function RouteComponent() {
           </p>
         )}
 
-        {/* Metadata */}
-        <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm text-muted-foreground border-b border-border pb-6">
-          <div className="flex items-center gap-2">
-            <Calendar size={16} />
-            <time dateTime={blog.date}>{formatDate(blog.date)}</time>
+        <div className="flex flex-col gap-4 border-b border-border pb-6">
+          {/* Metadata */}
+          <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Calendar size={16} />
+              <time dateTime={blog.date}>{formatDate(blog.date)}</time>
+            </div>
+            {readingTime > 0 && (
+              <div className="flex items-center gap-2">
+                <Clock size={16} />
+                <span>{readingTime} min read</span>
+              </div>
+            )}
+            {blog.authors && blog.authors.length > 0 && (
+              <div className="flex items-center gap-2">
+                <User size={16} />
+                <span>{blog.authors.join(', ')}</span>
+              </div>
+            )}
           </div>
-          {readingTime > 0 && (
-            <div className="flex items-center gap-2">
-              <Clock size={16} />
-              <span>{readingTime} min read</span>
-            </div>
-          )}
-          {blog.authors && blog.authors.length > 0 && (
-            <div className="flex items-center gap-2">
-              <User size={16} />
-              <span>{blog.authors.join(', ')}</span>
-            </div>
-          )}
-        </div>
 
-        {/* Tags */}
-        {blog.tags.length > 0 ? (
-          <div className="flex flex-wrap gap-2 mt-6">
-            {blog.tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        ) : null}
+          {/* Tags */}
+          {blog.tags.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {blog.tags.map((tag) => (
+                <Badge
+                  key={tag}
+                  variant="secondary"
+                  className="hover:scale-110 transition-all duration-300 cursor-pointer"
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          ) : null}
+        </div>
       </header>
 
       {/* Content */}
-      <div className="prose prose-lg dark:prose-invert max-w-none">
+      <div className="prose prose-lg dark:prose-invert max-w-none border-b border-border pb-6">
         <Markdown
           children={blog.content || ''}
           remarkPlugins={[remarkGfm, remarkBreaks]}
@@ -222,6 +272,33 @@ function RouteComponent() {
           }}
         />
       </div>
+
+      {/* Keep Reading Section */}
+      {otherBlogs.length > 0 && (
+        <section className="mt-16">
+          <h2 className="text-3xl font-bold mb-8">Keep reading</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8">
+            {otherBlogs.map((otherBlog) => (
+              <BlogCard
+                key={otherBlog.slug}
+                blog={otherBlog}
+                isRead={isBlogRead(otherBlog.slug)}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <button
+        type="button"
+        onClick={() => {
+          if (isClient) window.scrollTo({ top: 0, behavior: 'smooth' })
+        }}
+        className="fixed right-4 bottom-4 z-40 inline-flex items-center justify-center rounded-full bg-primary/70 text-primary-foreground shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background h-12 w-12 cursor-pointer"
+        aria-label="Back to top"
+      >
+        <ArrowUp size={20} />
+      </button>
     </article>
   )
 }
