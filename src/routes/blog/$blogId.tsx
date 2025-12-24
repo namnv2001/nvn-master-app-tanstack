@@ -1,7 +1,7 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
-import { ArrowLeft, ArrowUp, Calendar, Clock, User } from 'lucide-react'
+import { ArrowUp, Calendar, Clock, User } from 'lucide-react'
 import Markdown from 'react-markdown'
 import remarkBreaks from 'remark-breaks'
 import remarkGfm from 'remark-gfm'
@@ -28,30 +28,6 @@ function RouteComponent() {
 
   return (
     <article>
-      {/* Navigation */}
-      <nav className="mb-8">
-        <div className="flex items-center gap-4 mb-4">
-          <Link
-            to="/blog"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft size={18} />
-            <span>Back to Blog</span>
-          </Link>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Link to="/" className="hover:text-foreground transition-colors">
-            Home
-          </Link>
-          <span>/</span>
-          <Link to="/blog" className="hover:text-foreground transition-colors">
-            Blog
-          </Link>
-          <span>/</span>
-          <span className="text-foreground">{blog.title}</span>
-        </div>
-      </nav>
-
       {/* Header Section */}
       <header className="mb-12">
         {/* Hero Image */}
@@ -67,7 +43,7 @@ function RouteComponent() {
         )}
 
         {/* Title */}
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight text-center">
           {blog.title}
         </h1>
 
@@ -78,36 +54,42 @@ function RouteComponent() {
           </p>
         )}
 
-        {/* Metadata */}
-        <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm text-muted-foreground border-b border-border pb-6">
-          <div className="flex items-center gap-2">
-            <Calendar size={16} />
-            <time dateTime={blog.date}>{formatDate(blog.date)}</time>
+        <div className="flex flex-col gap-4 border-b border-border pb-6">
+          {/* Metadata */}
+          <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Calendar size={16} />
+              <time dateTime={blog.date}>{formatDate(blog.date)}</time>
+            </div>
+            {readingTime > 0 && (
+              <div className="flex items-center gap-2">
+                <Clock size={16} />
+                <span>{readingTime} min read</span>
+              </div>
+            )}
+            {blog.authors && blog.authors.length > 0 && (
+              <div className="flex items-center gap-2">
+                <User size={16} />
+                <span>{blog.authors.join(', ')}</span>
+              </div>
+            )}
           </div>
-          {readingTime > 0 && (
-            <div className="flex items-center gap-2">
-              <Clock size={16} />
-              <span>{readingTime} min read</span>
-            </div>
-          )}
-          {blog.authors && blog.authors.length > 0 && (
-            <div className="flex items-center gap-2">
-              <User size={16} />
-              <span>{blog.authors.join(', ')}</span>
-            </div>
-          )}
-        </div>
 
-        {/* Tags */}
-        {blog.tags.length > 0 ? (
-          <div className="flex flex-wrap gap-2 mt-6">
-            {blog.tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        ) : null}
+          {/* Tags */}
+          {blog.tags.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {blog.tags.map((tag) => (
+                <Badge
+                  key={tag}
+                  variant="secondary"
+                  className="hover:scale-110 transition-all duration-300 cursor-pointer"
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          ) : null}
+        </div>
       </header>
 
       {/* Content */}

@@ -211,7 +211,7 @@ Colors are accessible via Tailwind classes:
 
 ### Common Usage
 
-- Cards: `rounded-xl`
+- Cards: `rounded-3xl` (base), `rounded-xl` (alternative)
 - Buttons/Badges: `rounded-full` or `rounded-lg`
 - Images: `rounded-xl` or `rounded-2xl`
 - Code blocks: `rounded-xl`
@@ -220,10 +220,17 @@ Colors are accessible via Tailwind classes:
 
 ### Cards
 
+Base card pattern:
 ```tsx
 className =
-  'bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm'
+  'bg-card text-card-foreground flex flex-col gap-6 rounded-3xl border py-6 shadow-sm'
 ```
+
+Interactive card patterns:
+- Hover effects: `hover:shadow-lg hover:-translate-y-1 transition-all duration-300`
+- Border transitions: `border-border/50 hover:border-border`
+- Full height: `h-full` for equal-height cards in grids
+- Overflow: `overflow-hidden` for contained content
 
 ### Badges
 
@@ -247,6 +254,9 @@ className =
 - Full width: `w-full h-auto`
 - Cover: `w-full h-full object-cover`
 - Container: `rounded-xl overflow-hidden`
+- Aspect ratio: `aspect-video` for 16:9 ratio
+- Hover effects: `group-hover:scale-105 transition-transform duration-300`
+- Gradient overlays: `bg-gradient-to-t from-black/60 via-black/0 to-black/0` with `absolute inset-0`
 
 ## Layout Patterns
 
@@ -263,8 +273,12 @@ className =
 
 ### Grid
 
-- Use Tailwind grid utilities as needed
+Common grid patterns:
+- Responsive columns: `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8`
+- Auto rows: `grid auto-rows-min grid-rows-[auto_auto]`
+- Grid positioning: `col-start-2 row-span-2 row-start-1 self-start justify-self-end`
 - Container queries: `@container/card-header` for responsive grids
+- Conditional grid columns: `has-data-[slot=card-action]:grid-cols-[1fr_auto]`
 
 ## Dark Mode
 
@@ -297,14 +311,23 @@ className =
 ### Common Patterns
 
 - Colors: `transition-colors`
-- Transforms: `transition-transform duration-300 ease-in-out`
+- Transforms: `transition-transform duration-300`
+- All properties: `transition-all duration-300`
+- Opacity: `transition-opacity duration-300`
 - Always include transitions for interactive elements
+
+### Group Hover Patterns
+
+When using `group` class on parent, child elements can respond:
+- Text color: `group-hover:text-primary`
+- Scale: `group-hover:scale-105`
+- Opacity: `group-hover:opacity-100` (with initial `opacity-0`)
 
 ## Shadows
 
 ### Usage
 
-- Cards: `shadow-sm`
+- Cards: `shadow-sm` (base), `hover:shadow-lg` (interactive)
 - Sidebar/Modals: `shadow-2xl`
 - Headers: `shadow-lg`
 
@@ -315,6 +338,10 @@ className =
 - `cn()`: Use for conditional class merging (from `@/lib/utils`)
 - `data-slot`: Used for component identification and styling
 - Focus states: Always include accessible focus indicators
+- Line clamping: `line-clamp-2`, `line-clamp-3` for text truncation
+- Negative margins: `-mx-4`, `-my-4` for overlapping elements
+- Color opacity: `border-border/50` for semi-transparent borders
+- Arbitrary selectors: `[.border-b]:pb-6`, `[.border-t]:pt-6` for conditional styling
 
 ## Best Practices
 
