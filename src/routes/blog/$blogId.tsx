@@ -6,15 +6,9 @@ import Markdown from 'react-markdown'
 import remarkBreaks from 'remark-breaks'
 import remarkGfm from 'remark-gfm'
 
+import { BlogCard } from '@/components/BlogCard'
 import { Image } from '@/components/Image'
 import { Badge } from '@/components/ui/badge'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { getAllBlogs, getBlogBySlug } from '@/data/blog'
 import {
   calculateReadingTime,
@@ -22,7 +16,6 @@ import {
   isBlogRead,
   markBlogAsRead,
 } from '@/helpers'
-import { BlogCard } from '@/components/BlogCard'
 
 export const Route = createFileRoute('/blog/$blogId')({
   component: RouteComponent,
