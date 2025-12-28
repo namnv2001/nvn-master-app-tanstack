@@ -56,3 +56,26 @@ export const getBlogBySlug = createServerFn({ method: 'GET' })
     }
     return Promise.resolve(buildBlog(rawContent, data))
   })
+
+export const getTags = createServerFn({ method: 'GET' }).handler(
+  async (): Promise<Array<string>> => {
+    const blogs = await getAllBlogs()
+    return Array.from(new Set(blogs.map((blog) => blog.tags).flat()))
+  },
+)
+
+export const getBlogsByTag = createServerFn({ method: 'GET' })
+  .inputValidator(z.string().min(1))
+  .handler(async ({ data }): Promise<Array<Blog>> => {
+    const blogs = await getAllBlogs()
+    return blogs.filter((blog) =>
+      blog.tags.some((tag) => tag.toLowerCase() === data.toLowerCase()),
+    )
+  })
+
+export const searchTag = createServerFn({ method: 'GET' })
+  .inputValidator(z.string().min(1))
+  .handler(async ({ data }): Promise<Array<string>> => {
+    const tags = await getTags()
+    return tags.filter((tag) => tag.toLowerCase().includes(data.toLowerCase()))
+  })

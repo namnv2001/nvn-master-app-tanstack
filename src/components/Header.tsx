@@ -33,6 +33,10 @@ export default function Header() {
       label: 'Blog',
       to: '/blog',
     },
+    {
+      label: 'Tag',
+      to: '/tag',
+    },
   ]
 
   useEffect(() => {
