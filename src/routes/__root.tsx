@@ -103,10 +103,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <Loading />
         ) : (
           <div
-            className={cn(showSideBar && 'flex container max-w-7xl mx-auto')}
+            className={cn(showSideBar && 'flex container mx-auto')}
           >
             {showSideBar ? <SideBar /> : <NavBar />}
-            <div className="px-4 py-8 max-w-5xl flex-1">
+            <div className="px-4 py-8 w-full overflow-hidden">
               {children}
               <Footer />
             </div>

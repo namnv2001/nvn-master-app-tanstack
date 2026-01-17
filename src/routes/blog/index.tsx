@@ -5,6 +5,7 @@ import { BlogLink } from '@/components/BlogLink'
 import { Empty, EmptyDescription, EmptyTitle } from '@/components/ui/empty'
 import { getAllBlogs } from '@/data/blog'
 import { groupBlogsByYear, isBlogRead } from '@/helpers'
+import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/blog/')({
   ssr: 'data-only',
@@ -57,8 +58,11 @@ function BlogList() {
           {Object.entries(groupedBlogs)
             .sort((a, b) => b[0].localeCompare(a[0]))
             .map(([year, blogs]) => (
-              <div key={year}>
-                <h2 className="text-2xl font-bold">{year}</h2>
+              <div key={year} className="last:mb-0 mb-4">
+                <div className='flex items-center mb-4 gap-4'>
+                  <h1 className="text-3xl font-black">{year}</h1>
+                  <p className='text-sm text-muted-foreground font-bold'>{blogs.length} {blogs.length > 1 ? 'posts' : 'post'}</p>
+                </div>
                 {blogs.map((blog) => (
                   <BlogLink
                     blog={blog}

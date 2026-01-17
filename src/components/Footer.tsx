@@ -13,9 +13,9 @@ export const Footer = () => {
     )
   }
   return (
-    <footer className="text-white">
+    <footer className="text-white border-t border-accent">
       <div className="px-4 py-8">
-        <p className="text-sm text-gray-500 pt-8 flex flex-col items-center justify-center gap-4">
+        <p className="text-sm text-muted-foreground pt-8 flex flex-col items-center justify-center gap-4">
           <div className="flex items-center justify-center gap-8">
             {renderSocial('https://facebook.com/vn.120901', <Facebook />)}
             {renderSocial('https://github.com/namnv2001', <Github />)}

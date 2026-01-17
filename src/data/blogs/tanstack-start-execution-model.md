@@ -1,6 +1,7 @@
 ---
 id: execution-model
 title: Execution Model
+date: '2019-11-20'
 ---
 
 Understanding where code runs is fundamental to building TanStack Start applications. This guide explains TanStack Start's execution model and how to control where your code executes.
