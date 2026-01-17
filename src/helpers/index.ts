@@ -1,9 +1,20 @@
-export const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString('vi-VN', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
+import type { Blog } from '@/types'
+
+export const formatDate = (
+  date: string,
+  config?: {
+    locale?: string
+    options?: Intl.DateTimeFormatOptions
+  },
+) => {
+  return new Date(date).toLocaleDateString(
+    config?.locale || 'vi-VN',
+    config?.options || {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    },
+  )
 }
 
 export const calculateReadingTime = (content: string): number => {
@@ -51,4 +62,17 @@ export const getReadBlogs = (): Record<string, number> => {
     console.error('Failed to get read blogs:', error)
     return {}
   }
+}
+
+export const groupBlogsByYear = (
+  blogs: Array<Blog>,
+): Record<string, Array<Blog>> => {
+  return blogs.reduce(
+    (acc, blog) => {
+      const year = new Date(blog.date).getFullYear()
+      acc[year] = [...(acc[year] || []), blog]
+      return acc
+    },
+    {} as Record<string, Array<Blog>>,
+  )
 }

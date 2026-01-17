@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
-import { BlogCard } from '@/components/BlogCard'
+import { BlogLink } from '@/components/BlogLink'
 import { Empty, EmptyDescription, EmptyTitle } from '@/components/ui/empty'
 import { getAllBlogs } from '@/data/blog'
-import { isBlogRead } from '@/helpers'
+import { groupBlogsByYear, isBlogRead } from '@/helpers'
 
 export const Route = createFileRoute('/blog/')({
   ssr: 'data-only',
@@ -12,11 +12,12 @@ export const Route = createFileRoute('/blog/')({
   loader: async () => await getAllBlogs(),
 })
 
-// TODO: lazy load off screen things
 function BlogList() {
   const allBlogs = Route.useLoaderData()
   const { isClient } = Route.useRouteContext()
   const [readStatuses, setReadStatuses] = useState<Record<string, boolean>>({})
+
+  const groupedBlogs = groupBlogsByYear(allBlogs)
 
   useEffect(() => {
     if (isClient) {
@@ -52,14 +53,21 @@ function BlogList() {
           </Empty>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8">
-          {allBlogs.map((blog) => (
-            <BlogCard
-              blog={blog}
-              key={blog.slug}
-              isRead={readStatuses[blog.slug]}
-            />
-          ))}
+        <div className="flex flex-col">
+          {Object.entries(groupedBlogs)
+            .sort((a, b) => b[0].localeCompare(a[0]))
+            .map(([year, blogs]) => (
+              <div key={year}>
+                <h2 className="text-2xl font-bold">{year}</h2>
+                {blogs.map((blog) => (
+                  <BlogLink
+                    blog={blog}
+                    key={blog.slug}
+                    isRead={readStatuses[blog.slug]}
+                  />
+                ))}
+              </div>
+            ))}
         </div>
       )}
     </>
