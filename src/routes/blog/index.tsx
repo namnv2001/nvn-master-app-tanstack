@@ -5,7 +5,6 @@ import { BlogLink } from '@/components/BlogLink'
 import { Empty, EmptyDescription, EmptyTitle } from '@/components/ui/empty'
 import { getAllBlogs } from '@/data/blog'
 import { groupBlogsByYear, isBlogRead } from '@/helpers'
-import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/blog/')({
   ssr: 'data-only',

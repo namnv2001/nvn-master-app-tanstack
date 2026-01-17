@@ -106,8 +106,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             className={cn(showSideBar && 'flex container mx-auto')}
           >
             {showSideBar ? <SideBar /> : <NavBar />}
-            <div className="px-4 py-8 w-full overflow-hidden">
-              {children}
+            <div className="py-8 w-full overflow-hidden">
+              <div className='px-28'>{children}</div>
               <Footer />
             </div>
           </div>

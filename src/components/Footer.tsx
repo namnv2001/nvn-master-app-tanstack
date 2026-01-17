@@ -13,7 +13,7 @@ export const Footer = () => {
     )
   }
   return (
-    <footer className="text-white border-t border-accent">
+    <footer className="border-t border-accent mt-8 block">
       <div className="px-4 py-8">
         <p className="text-sm text-muted-foreground pt-8 flex flex-col items-center justify-center gap-4">
           <div className="flex items-center justify-center gap-8">
