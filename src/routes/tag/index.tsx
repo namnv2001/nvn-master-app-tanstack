@@ -7,7 +7,7 @@ import { BlogCard } from '@/components/BlogCard'
 import { Badge } from '@/components/ui/badge'
 import { Empty, EmptyDescription, EmptyTitle } from '@/components/ui/empty'
 import { Input } from '@/components/ui/input'
-import { getBlogsByTag, getTags, searchTag } from '@/data/blog'
+import { getArticlesByTag, getTags, searchTag } from '@/data/articles'
 import { isBlogRead } from '@/helpers'
 
 export const Route = createFileRoute('/tag/')({
@@ -30,7 +30,7 @@ function RouteComponent() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredTags, setFilteredTags] = useState<Array<string>>(allTags)
   const [selectedBlogs, setSelectedBlogs] = useState<
-    Awaited<ReturnType<typeof getBlogsByTag>>
+    Awaited<ReturnType<typeof getArticlesByTag>>
   >([])
   const [readStatuses, setReadStatuses] = useState<Record<string, boolean>>({})
   const [isSearching, setIsSearching] = useState(false)
@@ -75,7 +75,7 @@ function RouteComponent() {
   useEffect(() => {
     if (!isClient || !selected) return
 
-    getBlogsByTag({ data: selected })
+    getArticlesByTag({ data: selected })
       .then(setSelectedBlogs)
       .catch((error) => {
         console.error('Failed to fetch blogs by tag:', error)

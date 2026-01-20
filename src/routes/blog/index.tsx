@@ -1,37 +1,24 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
 
-import { BlogLink } from '@/components/BlogLink'
+import { ArticleLink } from '@/components/ArticleLink'
 import { Empty, EmptyDescription, EmptyTitle } from '@/components/ui/empty'
-import { getAllBlogs } from '@/data/blog'
-import { groupBlogsByYear, isBlogRead } from '@/helpers'
+import { getAllArticles } from '@/data/articles'
+import { groupBlogsByYear } from '@/helpers'
 
 export const Route = createFileRoute('/blog/')({
   ssr: 'data-only',
   component: BlogList,
-  loader: async () => await getAllBlogs(),
+  loader: async () => await getAllArticles(),
 })
 
 function BlogList() {
-  const allBlogs = Route.useLoaderData()
-  const { isClient } = Route.useRouteContext()
-  const [readStatuses, setReadStatuses] = useState<Record<string, boolean>>({})
+  const { blogs, gears } = Route.useLoaderData()
 
-  const groupedBlogs = groupBlogsByYear(allBlogs)
-
-  useEffect(() => {
-    if (isClient) {
-      const statuses: Record<string, boolean> = {}
-      allBlogs.forEach((blog) => {
-        statuses[blog.slug] = isBlogRead(blog.slug)
-      })
-      setReadStatuses(statuses)
-    }
-  }, [allBlogs, isClient])
+  const groupedBlogs = groupBlogsByYear(blogs)
 
   return (
     <>
-      {allBlogs.length > 0 && (
+      {blogs.length > 0 && (
         <div className="mb-8 md:mb-12">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">
             Blog
@@ -42,7 +29,7 @@ function BlogList() {
         </div>
       )}
 
-      {allBlogs.length === 0 ? (
+      {blogs.length === 0 ? (
         <div className="text-center py-16">
           <Empty>
             <EmptyTitle>No blog posts found</EmptyTitle>
@@ -56,17 +43,16 @@ function BlogList() {
         <div className="flex flex-col">
           {Object.entries(groupedBlogs)
             .sort((a, b) => b[0].localeCompare(a[0]))
-            .map(([year, blogs]) => (
+            .map(([year, articles]) => (
               <div key={year} className="last:mb-0 mb-4">
                 <div className='flex items-center mb-4 gap-4'>
                   <h1 className="text-3xl font-black">{year}</h1>
                   <p className='text-sm text-muted-foreground font-bold'>{blogs.length} {blogs.length > 1 ? 'posts' : 'post'}</p>
                 </div>
-                {blogs.map((blog) => (
-                  <BlogLink
-                    blog={blog}
-                    key={blog.slug}
-                    isRead={readStatuses[blog.slug]}
+                {articles.map((article) => (
+                  <ArticleLink
+                    article={article}
+                    key={article.slug}
                   />
                 ))}
               </div>

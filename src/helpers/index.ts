@@ -1,4 +1,6 @@
-import type { Blog } from '@/types'
+import matter from 'gray-matter'
+
+import type { Article } from '@/types'
 
 export const formatDate = (
   date: string,
@@ -8,13 +10,31 @@ export const formatDate = (
   },
 ) => {
   return new Date(date).toLocaleDateString(
-    config?.locale || 'vi-VN',
+    config?.locale || 'en-US',
     config?.options || {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
     },
   )
+}
+
+export const buildMarkdownContent = (rawContent: string, slug: string): Article => {
+  const { data: parsed, content } = matter(rawContent)
+
+  const result: Article = {
+    title: parsed.title || '',
+    date: parsed.date || '',
+    lastModified: parsed.lastModified || parsed.date || '',
+    tags: parsed.tags || [],
+    draft: parsed.draft ?? false,
+    summary: parsed.summary || '',
+    images: parsed.images || [],
+    slug,
+    authors: parsed.authors || [],
+    content: content,
+  }
+  return result
 }
 
 export const calculateReadingTime = (content: string): number => {
@@ -65,14 +85,15 @@ export const getReadBlogs = (): Record<string, number> => {
 }
 
 export const groupBlogsByYear = (
-  blogs: Array<Blog>,
-): Record<string, Array<Blog>> => {
+  blogs: Array<Article>,
+): Record<string, Array<Article>> => {
   return blogs.reduce(
     (acc, blog) => {
       const year = new Date(blog.date).getFullYear()
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       acc[year] = [...(acc[year] || []), blog]
       return acc
     },
-    {} as Record<string, Array<Blog>>,
+    {} as Record<string, Array<Article>>,
   )
 }

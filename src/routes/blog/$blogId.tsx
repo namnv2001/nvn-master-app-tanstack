@@ -8,7 +8,7 @@ import remarkGfm from 'remark-gfm'
 
 import { Image } from '@/components/Image'
 import { Badge } from '@/components/ui/badge'
-import { getBlogBySlug } from '@/data/blog'
+import { getArticleBySlug } from '@/data/articles'
 import {
   calculateReadingTime,
   formatDate,
@@ -17,7 +17,7 @@ import {
 
 export const Route = createFileRoute('/blog/$blogId')({
   component: RouteComponent,
-  loader: ({ params: { blogId } }) => getBlogBySlug({ data: blogId }),
+  loader: ({ params: { blogId } }) => getArticleBySlug({ data: blogId }),
 })
 
 function RouteComponent() {
@@ -133,7 +133,7 @@ function RouteComponent() {
       </header>
 
       {/* Content */}
-      <div className="prose prose-lg dark:prose-invert max-w-none border-b border-border pb-6">
+      <div className="prose prose-lg dark:prose-invert max-w-none pb-6">
         <Markdown
           children={blog.content || ''}
           remarkPlugins={[remarkGfm, remarkBreaks]}

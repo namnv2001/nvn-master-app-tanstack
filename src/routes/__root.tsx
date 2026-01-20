@@ -107,7 +107,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           >
             {showSideBar ? <SideBar /> : <NavBar />}
             <div className="py-8 w-full overflow-hidden">
-              <div className='px-28'>{children}</div>
+              <div className='px-4 xl:pl-28'>{children}</div>
               <Footer />
             </div>
           </div>

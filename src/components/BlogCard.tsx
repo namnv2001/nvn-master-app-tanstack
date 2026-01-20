@@ -12,14 +12,14 @@ import {
   CardTitle,
 } from './ui/card'
 
-import type { Blog } from '@/types'
+import type { Article } from '@/types'
 import { formatDate } from '@/helpers'
 
 export const BlogCard = ({
   blog,
   isRead = false,
 }: {
-  blog: Blog
+  blog: Article
   isRead: boolean
 }) => {
   return (

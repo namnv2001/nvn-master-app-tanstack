@@ -1,32 +1,32 @@
 import { Link } from '@tanstack/react-router'
-import type { Blog } from '@/types'
+import type { Article } from '@/types'
 import { cn } from '@/lib/utils'
-import { formatDate } from '@/helpers'
+import { formatDate, isBlogRead } from '@/helpers'
 
-export const BlogLink = ({
-  blog,
-  isRead = false,
+export const ArticleLink = ({
+  article,
 }: {
-  blog: Blog
-  isRead: boolean
-}) => {
+  article: Article
+  }) => {
+  const isRead = isBlogRead(article.slug)
+
   return (
     <Link
       to="/blog/$blogId"
-      params={{ blogId: blog.slug }}
+      params={{ blogId: article.slug }}
       className={cn(
         'border-b border-accent last:border-b-0 p-2 hover:bg-accent flex md:items-center flex-col md:flex-row',
       )}
     >
       <p className={cn('w-32 text-sm', isRead && 'text-muted-foreground')}>
-        {formatDate(blog.date, {
+        {formatDate(article.date, {
           options: { month: 'long', day: '2-digit', year: undefined },
         })}
       </p>
       <h1
         className={cn('flex-1 text-link font-black', isRead && 'text-link/70')}
       >
-        {blog.title}
+        {article.title}
       </h1>
     </Link>
   )
