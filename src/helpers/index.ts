@@ -19,7 +19,10 @@ export const formatDate = (
   )
 }
 
-export const buildMarkdownContent = (rawContent: string, slug: string): Article => {
+export const buildMarkdownContent = (
+  rawContent: string,
+  slug: string,
+): Article => {
   const { data: parsed, content } = matter(rawContent)
 
   const result: Article = {
@@ -96,4 +99,18 @@ export const groupBlogsByYear = (
     },
     {} as Record<string, Array<Article>>,
   )
+}
+
+export const debounce = (
+  func: (...args: Array<any>) => void,
+  wait: number = 300,
+) => {
+  let timer: ReturnType<typeof setTimeout> | null = null
+
+  return (...args: Array<any>) => {
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => {
+      func(...args)
+    }, wait)
+  }
 }
