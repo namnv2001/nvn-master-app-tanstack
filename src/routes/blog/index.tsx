@@ -1,10 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
 
+import { Search } from 'lucide-react'
+
 import { ArticleLink } from '@/components/ArticleLink'
 import { Empty, EmptyDescription, EmptyTitle } from '@/components/ui/empty'
 import { getAllArticles } from '@/data/articles'
-import { debounce, groupBlogsByYear } from '@/helpers'
+import { debounce, groupArticlesByYear } from '@/helpers'
 import { Input } from '@/components/ui/input'
 
 export const Route = createFileRoute('/blog/')({
@@ -18,7 +20,7 @@ function BlogList() {
   const [filteredBlogs, setFilteredBlogs] = useState(blogs)
 
   const groupedBlogs = useMemo(
-    () => groupBlogsByYear(filteredBlogs),
+    () => groupArticlesByYear(filteredBlogs),
     [filteredBlogs],
   )
 
@@ -56,11 +58,17 @@ function BlogList() {
         </div>
       ) : (
         <>
-          <Input
-            className="mb-6 max-w-md"
-            placeholder={`Search ${blogs.length} posts...`}
-            onChange={(e) => debouncedOnFilterBlogs(e.target.value)}
-          />
+          <div className="relative mb-6 max-w-md">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              size={20}
+            />
+            <Input
+              className="pl-10"
+              placeholder={`Search ${blogs.length} posts...`}
+              onChange={(e) => debouncedOnFilterBlogs(e.target.value)}
+            />
+          </div>
           <div className="flex flex-col">
             {Object.entries(groupedBlogs)
               .sort((a, b) => b[0].localeCompare(a[0]))
