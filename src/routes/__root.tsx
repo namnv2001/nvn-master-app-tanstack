@@ -6,14 +6,19 @@ import {
   useLocation,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+import { useEffect, useState } from 'react'
+
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
 
 import { Footer } from '@/components/Footer'
-import Header from '@/components/Header'
+import NavBar from '@/components/NavBar'
+import SideBar from '@/components/SideBar'
 import { isClient } from '@/helpers'
+import { cn } from '@/lib/utils'
+import Loading from '@/components/Loading'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -52,6 +57,32 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const { isClient: _isClient } = Route.useRouteContext()
   const location = useLocation()
 
+  const [showSideBar, setShowSideBar] = useState(true)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!_isClient) return
+
+    const resizeHandler = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width } = entry.contentRect
+        if (width < 1024) {
+          setShowSideBar(false)
+        } else {
+          setShowSideBar(true)
+        }
+      }
+    })
+    resizeHandler.observe(document.body)
+
+    return () => resizeHandler.disconnect()
+  }, [_isClient])
+
+  useEffect(() => {
+    if (!_isClient) return
+    setLoading(false)
+  }, [_isClient])
+
   return (
     <html lang="en">
       <head>
@@ -67,14 +98,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-background">
-        <div className="w-full">
-          <Header />
-          <div className="container max-w-5xl mx-auto px-4 py-8">
-            {children}
+      <body className="bg-background">
+        {loading ? (
+          <Loading />
+        ) : (
+          <div
+            className={cn(showSideBar && 'flex container mx-auto')}
+          >
+            {showSideBar ? <SideBar /> : <NavBar />}
+            <div className="py-8 w-full overflow-hidden">
+              <div className='px-4 xl:pl-28'>{children}</div>
+              <Footer />
+            </div>
           </div>
-          <Footer />
-        </div>
+        )}
         <TanStackDevtools
           config={{
             position: 'bottom-left',

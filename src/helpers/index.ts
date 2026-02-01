@@ -1,9 +1,43 @@
-export const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString('vi-VN', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
+import matter from 'gray-matter'
+
+import type { Article } from '@/types'
+
+export const formatDate = (
+  date: string,
+  config?: {
+    locale?: string
+    options?: Intl.DateTimeFormatOptions
+  },
+) => {
+  return new Date(date).toLocaleDateString(
+    config?.locale || 'en-US',
+    config?.options || {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    },
+  )
+}
+
+export const buildMarkdownContent = (
+  rawContent: string,
+  slug: string,
+): Article => {
+  const { data: parsed, content } = matter(rawContent)
+
+  const result: Article = {
+    title: parsed.title || '',
+    date: parsed.date || '',
+    lastModified: parsed.lastModified || parsed.date || '',
+    tags: parsed.tags || [],
+    draft: parsed.draft ?? false,
+    summary: parsed.summary || '',
+    images: parsed.images || [],
+    slug,
+    authors: parsed.authors || [],
+    content: content,
+  }
+  return result
 }
 
 export const calculateReadingTime = (content: string): number => {
@@ -51,4 +85,55 @@ export const getReadBlogs = (): Record<string, number> => {
     console.error('Failed to get read blogs:', error)
     return {}
   }
+}
+
+export const groupArticlesByYear = (
+  blogs: Array<Article>,
+): Record<string, Array<Article>> => {
+  return blogs.reduce(
+    (acc, blog) => {
+      const year = new Date(blog.date).getFullYear()
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      acc[year] = [...(acc[year] || []), blog]
+      return acc
+    },
+    {} as Record<string, Array<Article>>,
+  )
+}
+
+export const debounce = (
+  func: (...args: Array<any>) => void,
+  wait: number = 300,
+) => {
+  let timer: ReturnType<typeof setTimeout> | null = null
+
+  return (...args: Array<any>) => {
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => {
+      func(...args)
+    }, wait)
+  }
+}
+
+export const groupTopicsByAlphabet = (
+  topics: Array<string>,
+): Record<string, Array<string>> => {
+  return topics.reduce(
+    (acc, topic) => {
+      const firstLetter = topic.charAt(0).toUpperCase()
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      acc[firstLetter] = [...(acc[firstLetter] || []), topic]
+      return acc
+    },
+    {} as Record<string, Array<string>>,
+  )
+}
+
+export const getArticlesByTag = (
+  tag: string,
+  articles: Array<Article>,
+): Array<Article> => {
+  return articles.filter((article) =>
+    article.tags.some((t) => t.toLowerCase() === tag.toLowerCase()),
+  )
 }

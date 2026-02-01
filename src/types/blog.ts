@@ -1,4 +1,4 @@
-export type Blog = {
+export type Article = {
   title: string
   date: string
   lastModified: string

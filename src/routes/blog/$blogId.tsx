@@ -1,33 +1,28 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { useEffect, useRef, useState } from 'react'
-
 import { ArrowUp, Calendar, Clock, User } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+
 import Markdown from 'react-markdown'
 import remarkBreaks from 'remark-breaks'
 import remarkGfm from 'remark-gfm'
 
-import { BlogCard } from '@/components/BlogCard'
 import { Image } from '@/components/Image'
 import { Badge } from '@/components/ui/badge'
-import { getAllBlogs, getBlogBySlug } from '@/data/blog'
+import { getArticleBySlug } from '@/data/articles'
 import {
   calculateReadingTime,
   formatDate,
-  isBlogRead,
-  markBlogAsRead,
+  markBlogAsRead
 } from '@/helpers'
 
 export const Route = createFileRoute('/blog/$blogId')({
   component: RouteComponent,
-  loader: ({ params: { blogId } }) => getBlogBySlug({ data: blogId }),
+  loader: ({ params: { blogId } }) => getArticleBySlug({ data: blogId }),
 })
 
 function RouteComponent() {
   const blog = Route.useLoaderData()
   const { isClient } = Route.useRouteContext()
-  const [otherBlogs, setOtherBlogs] = useState<
-    Awaited<ReturnType<typeof getAllBlogs>>
-  >([])
   const hasMarkedAsRead = useRef(false)
 
   const readingTime = blog.content ? calculateReadingTime(blog.content) : 0
@@ -36,16 +31,6 @@ function RouteComponent() {
   useEffect(() => {
     if (isClient) window.scrollTo(0, 0)
   }, [blog.slug])
-
-  // Fetch other blogs for "Keep reading" section
-  useEffect(() => {
-    if (isClient) {
-      getAllBlogs().then((blogs) => {
-        const filtered = blogs.filter((b) => b.slug !== blog.slug).slice(0, 4)
-        setOtherBlogs(filtered)
-      })
-    }
-  }, [blog.slug, isClient])
 
   // Read status tracking
   useEffect(() => {
@@ -133,13 +118,14 @@ function RouteComponent() {
           {blog.tags.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {blog.tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="secondary"
-                  className="hover:scale-110 transition-all duration-300 cursor-pointer"
-                >
-                  {tag}
-                </Badge>
+                <Link to="/tag" search={{ selected: tag }} key={tag}>
+                  <Badge
+                    variant="secondary"
+                    className="hover:scale-110 transition-all duration-300 cursor-pointer"
+                  >
+                    {tag}
+                  </Badge>
+                </Link>
               ))}
             </div>
           ) : null}
@@ -147,7 +133,7 @@ function RouteComponent() {
       </header>
 
       {/* Content */}
-      <div className="prose prose-lg dark:prose-invert max-w-none border-b border-border pb-6">
+      <div className="prose prose-lg dark:prose-invert max-w-none pb-6">
         <Markdown
           children={blog.content || ''}
           remarkPlugins={[remarkGfm, remarkBreaks]}
@@ -265,22 +251,6 @@ function RouteComponent() {
           }}
         />
       </div>
-
-      {/* Keep Reading Section */}
-      {otherBlogs.length > 0 && (
-        <section className="mt-16">
-          <h2 className="text-3xl font-bold mb-8">Keep reading</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8">
-            {otherBlogs.map((otherBlog) => (
-              <BlogCard
-                key={otherBlog.slug}
-                blog={otherBlog}
-                isRead={isBlogRead(otherBlog.slug)}
-              />
-            ))}
-          </div>
-        </section>
-      )}
 
       <button
         type="button"
