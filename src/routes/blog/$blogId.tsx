@@ -1,5 +1,5 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { ArrowUp, Calendar, Clock, User } from 'lucide-react'
+import { ArrowUp, Calendar, Clock, Link as Link2, User } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 
 import Markdown from 'react-markdown'
@@ -9,11 +9,7 @@ import remarkGfm from 'remark-gfm'
 import { Image } from '@/components/Image'
 import { Badge } from '@/components/ui/badge'
 import { getArticleBySlug } from '@/data/articles'
-import {
-  calculateReadingTime,
-  formatDate,
-  markBlogAsRead
-} from '@/helpers'
+import { calculateReadingTime, formatDate, markBlogAsRead } from '@/helpers'
 
 export const Route = createFileRoute('/blog/$blogId')({
   component: RouteComponent,
@@ -151,30 +147,84 @@ function RouteComponent() {
                 {...props}
               />
             ),
-            h1: ({ node, ...props }) => (
-              <h1
-                className="text-4xl font-bold mt-12 mb-6 first:mt-0"
-                {...props}
-              />
-            ),
-            h2: ({ node, ...props }) => (
-              <h2
-                className="text-3xl font-bold mt-10 mb-4 border-b border-border pb-2"
-                {...props}
-              />
-            ),
-            h3: ({ node, ...props }) => (
-              <h3 className="text-2xl font-bold mt-8 mb-3" {...props} />
-            ),
-            h4: ({ node, ...props }) => (
-              <h4 className="text-xl font-bold mt-6 mb-2" {...props} />
-            ),
-            h5: ({ node, ...props }) => (
-              <h5 className="text-lg font-bold mt-5 mb-2" {...props} />
-            ),
-            h6: ({ node, ...props }) => (
-              <h6 className="text-base font-bold mt-4 mb-2" {...props} />
-            ),
+            h1: ({ node, children, ...props }) => {
+              const id = children?.toString().replace(/\s+/g, '-').toLowerCase()
+              return (
+                <h1
+                  id={id}
+                  className="text-4xl font-bold mt-12 mb-6 first:mt-0"
+                  {...props}
+                >
+                  <a href={`#${id}`} className="anchor-link">
+                    <Link2 size={16} className="inline-block mr-2 -ml-6" />
+                  </a>
+                  {children}
+                </h1>
+              )
+            },
+            h2: ({ node, children, ...props }) => {
+              const id = children?.toString().replace(/\s+/g, '-').toLowerCase()
+              return (
+                <h2
+                  id={id}
+                  className="text-3xl font-bold mt-10 mb-4 border-b border-border pb-2"
+                  {...props}
+                >
+                  <a href={`#${id}`} className="anchor-link">
+                    <Link2 size={16} className="inline-block mr-2 -ml-6" />
+                  </a>
+                  {children}
+                </h2>
+              )
+            },
+            h3: ({ node, children, ...props }) => {
+              const id = children?.toString().replace(/\s+/g, '-').toLowerCase()
+              return (
+                <h3 id={id} className="text-2xl font-bold mt-8 mb-3" {...props}>
+                  <a href={`#${id}`} className="anchor-link">
+                    <Link2 size={16} className="inline-block mr-2 -ml-6" />
+                  </a>
+                  {children}
+                </h3>
+              )
+            },
+            h4: ({ node, children, ...props }) => {
+              const id = children?.toString().replace(/\s+/g, '-').toLowerCase()
+              return (
+                <h4 id={id} className="text-xl font-bold mt-6 mb-2" {...props}>
+                  <a href={`#${id}`} className="anchor-link">
+                    <Link2 size={16} className="inline-block mr-2 -ml-6" />
+                  </a>
+                  {children}
+                </h4>
+              )
+            },
+            h5: ({ node, children, ...props }) => {
+              const id = children?.toString().replace(/\s+/g, '-').toLowerCase()
+              return (
+                <h5 id={id} className="text-lg font-bold mt-5 mb-2" {...props}>
+                  <a href={`#${id}`} className="anchor-link">
+                    <Link2 size={16} className="inline-block mr-2 -ml-6" />
+                  </a>
+                  {children}
+                </h5>
+              )
+            },
+            h6: ({ node, children, ...props }) => {
+              const id = children?.toString().replace(/\s+/g, '-').toLowerCase()
+              return (
+                <h6
+                  id={id}
+                  className="text-base font-bold mt-4 mb-2"
+                  {...props}
+                >
+                  <a href={`#${id}`} className="anchor-link">
+                    <Link2 size={16} className="inline-block mr-2 -ml-6" />
+                  </a>
+                  {children}
+                </h6>
+              )
+            },
             p: ({ node, ...props }) => (
               <p className="mb-6 leading-8 text-foreground" {...props} />
             ),
