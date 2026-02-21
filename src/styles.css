@@ -154,13 +154,108 @@ code {
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 p-0 m-0 box-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
-pre:has(> code) > code {
-  @apply block px-4 overflow-x-auto;
+.article-content {
+  pre:has(> code)>code {
+    @apply block px-4 overflow-x-auto;
+  }
+
+  h1 {
+    @apply text-4xl font-bold mt-12 mb-6 first:mt-0;
+  }
+
+  h2 {
+    @apply text-3xl font-bold mt-10 mb-4 border-b border-border pb-2;
+  }
+
+  h3 {
+    @apply text-2xl font-bold mt-8 mb-3;
+  }
+
+  h4 {
+    @apply text-xl font-bold mt-6 mb-2;
+  }
+
+  h5 {
+    @apply text-lg font-bold mt-5 mb-2;
+  }
+
+  h6 {
+    @apply text-base font-bold mt-4 mb-2;
+  }
+
+  p {
+    @apply mb-6 leading-8 text-foreground;
+  }
+
+  ul {
+    @apply list-disc list-outside mb-6 space-y-2 ml-6;
+  }
+
+  ol {
+    @apply list-decimal list-outside mb-6 space-y-2 ml-6;
+  }
+
+  li {
+    @apply leading-7;
+  }
+
+  blockquote {
+    @apply border-l-4 border-primary pl-6 italic my-6 text-muted-foreground bg-muted/50 py-4 rounded-r-lg;
+  }
+
+  code {
+    @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono text-foreground before:content-[''] after:content-[''];
+  }
+
+  pre {
+    @apply bg-muted p-6 rounded-xl my-6 overflow-x-auto border border-border;
+  }
+
+  hr {
+    @apply my-8 border-border;
+  }
+
+  table {
+    @apply w-full border-collapse border border-border rounded-lg overflow-x-auto my-6;
+  }
+
+  thead {
+    @apply bg-muted;
+  }
+
+  tr {
+    @apply border-b border-border hover:bg-muted/50 transition-colors;
+  }
+
+  th {
+    @apply border border-border px-4 py-3 text-left font-bold;
+  }
+
+  td {
+    @apply border border-border px-4 py-3;
+  }
+
+  strong {
+    @apply font-bold text-foreground;
+  }
+
+  em {
+    @apply italic;
+  }
+
+  img {
+    @apply rounded-xl overflow-hidden;
+  }
+
+  a {
+    @apply text-link hover:underline underline-offset-4;
+  }
 }
