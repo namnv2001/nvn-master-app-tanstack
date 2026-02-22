@@ -1,7 +1,6 @@
 Hi, I'm Nam Nguyen, a software engineer based in Ha Noi, Vietnam. Welcome to my spot to share my thoughts, projects and experiences in software development, life, and everything in between. Hope you find something interesting here!
 
-I currently work at [Teko Solutions](https://teko.vn/) as a Junior Software Engineer. I like working out, playing games, and
-learning new things.
+I currently work at [Teko Solutions](https://teko.vn/) as a Junior Software Engineer. I like working out, playing games, and learning new things.
 
 ## Contact
 

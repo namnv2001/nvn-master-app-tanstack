@@ -78,13 +78,13 @@ function RouteComponent() {
   }, [blog.slug, isClient])
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 items-start">
-      <article className="article-content col-span-1 xl:col-span-3">
+    <div>
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 items-start">
         {/* Header Section */}
-        <header className="mb-12">
+        <header className="mb-12 col-span-1 xl:col-span-3">
           {/* Hero Image */}
           {blog.images.length > 0 && (
-            <div className="relative w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden mb-8 bg-muted">
+            <div className="relative w-full h-[200px] md:h-[300px] rounded-2xl overflow-hidden mb-8 bg-muted">
               <Image
                 src={blog.images[0]}
                 alt={blog.title}
@@ -132,10 +132,7 @@ function RouteComponent() {
               <div className="flex flex-wrap gap-2">
                 {blog.tags.map((tag) => (
                   <Link to="/tag/$tagId" params={{ tagId: tag }} key={tag}>
-                    <Badge
-                      variant="secondary"
-                      className="hover:scale-110 transition-all duration-300 cursor-pointer"
-                    >
+                    <Badge variant="secondary" className="cursor-pointer">
                       {tag}
                     </Badge>
                   </Link>
@@ -144,33 +141,36 @@ function RouteComponent() {
             ) : null}
           </div>
         </header>
-
-        {/* Content */}
-        <div className="prose prose-lg dark:prose-invert max-w-none pb-6">
-          <Markdown
-            children={blog.content || ''}
-            remarkPlugins={[remarkGfm, remarkBreaks]}
-            rehypePlugins={[
-              rehypeSlug,
-              [rehypeAutolinkHeadings, { behavior: 'prepend', maxDepth: 4 }],
-            ]}
-          />
-        </div>
-      </article>
-      {/* Table of Contents */}
-      <aside className="hidden xl:block xl:col-span-1 sticky top-0">
-        <TableOfContents toc={toc} />
-      </aside>
-      <button
-        type="button"
-        onClick={() => {
-          if (isClient) window.scrollTo({ top: 0, behavior: 'smooth' })
-        }}
-        className="fixed right-4 bottom-4 z-40 inline-flex items-center justify-center rounded-full bg-primary/70 text-primary-foreground shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background h-12 w-12 cursor-pointer"
-        aria-label="Back to top"
-      >
-        <ArrowUp size={20} />
-      </button>
+      </div>
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 items-start">
+        <article className="article-content col-span-1 xl:col-span-3">
+          {/* Content */}
+          <div className="prose prose-lg dark:prose-invert max-w-none pb-6">
+            <Markdown
+              children={blog.content || ''}
+              remarkPlugins={[remarkGfm, remarkBreaks]}
+              rehypePlugins={[
+                rehypeSlug,
+                [rehypeAutolinkHeadings, { behavior: 'prepend', maxDepth: 4 }],
+              ]}
+            />
+          </div>
+        </article>
+        {/* Table of Contents */}
+        <aside className="hidden xl:block xl:col-span-1 sticky top-8">
+          <TableOfContents toc={toc} />
+        </aside>
+        <button
+          type="button"
+          onClick={() => {
+            if (isClient) window.scrollTo({ top: 0, behavior: 'smooth' })
+          }}
+          className="fixed right-4 bottom-4 z-40 inline-flex items-center justify-center rounded-full bg-primary/70 text-primary-foreground shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background h-12 w-12 cursor-pointer"
+          aria-label="Back to top"
+        >
+          <ArrowUp size={20} />
+        </button>
+      </div>
     </div>
   )
 }

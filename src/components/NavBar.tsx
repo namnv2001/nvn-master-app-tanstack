@@ -34,7 +34,7 @@ const NavBar = () => {
   }
 
   return (
-    <div className="sticky top-0 z-50">
+    <div className="sticky top-0 z-50 bg-background">
       <div className="px-4 py-4 flex items-center justify-between relative">
         <Link to="/" className="font-semibold text-lg">
           Nam Nguyen

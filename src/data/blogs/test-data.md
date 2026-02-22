@@ -5,7 +5,7 @@ lastModified: '2024-08-16'
 tags: ['next-js', 'tailwind', 'guide']
 draft: false
 summary: 'Looking for a performant, out of the box template, with all the best in web technology to support your blogging needs? Checkout the Tailwind Nextjs Starter Blog template.'
-images: ['/static/images/DSCF1064.JPG', '/static/images/canada/toronto.jpg']
+images: ['/static/images/DSCF1064.JPG']
 authors: ['default', 'sparrowhawk']
 ---
 
