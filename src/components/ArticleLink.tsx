@@ -3,11 +3,7 @@ import type { Article } from '@/types'
 import { cn } from '@/lib/utils'
 import { formatDate, isBlogRead } from '@/helpers'
 
-export const ArticleLink = ({
-  article,
-}: {
-  article: Article
-  }) => {
+export const ArticleLink = ({ article }: { article: Article }) => {
   const isRead = isBlogRead(article.slug)
 
   return (

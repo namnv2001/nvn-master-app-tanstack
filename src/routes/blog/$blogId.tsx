@@ -69,7 +69,7 @@ function RouteComponent() {
       }
     }
 
-    window.addEventListener('scroll', scrollHandler)
+    window.addEventListener('scroll', scrollHandler, { passive: true })
 
     return () => {
       clearTimeout(timer)
@@ -131,7 +131,7 @@ function RouteComponent() {
             {blog.tags.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {blog.tags.map((tag) => (
-                  <Link to="/tag" search={{ selected: tag }} key={tag}>
+                  <Link to="/tag/$tagId" params={{ tagId: tag }} key={tag}>
                     <Badge
                       variant="secondary"
                       className="hover:scale-110 transition-all duration-300 cursor-pointer"

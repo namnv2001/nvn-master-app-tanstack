@@ -1,25 +1,13 @@
 import { Link, useLocation } from '@tanstack/react-router'
 import { cn } from '@/lib/utils'
 
+import { NAV_ITEMS } from '@/constants'
+
 const SideBar = () => {
   const location = useLocation()
-  const navItems = [
-    {
-      label: 'About Me',
-      to: '/about',
-    },
-    {
-      label: 'My Blogs',
-      to: '/blog',
-    },
-    {
-      label: 'Tag',
-      to: '/tag',
-    },
-  ]
 
   const renderNavItems = () => {
-    return navItems.map((item) => (
+    return NAV_ITEMS.map((item) => (
       <Link
         key={item.label}
         to={item.to}
