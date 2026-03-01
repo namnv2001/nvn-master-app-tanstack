@@ -1,11 +1,12 @@
 ---
 title: 'How I Built My First Gunpla'
 date: '2026-02-01'
-lastModified: '2026-02-01'
+lastModified: '2026-22-02'
 tags: ['gunpla', 'hobby', 'life']
 draft: false
 summary: 'I built my first Gunpla and it was a blast!'
 images: ['/static/images/how-i-built-my-first-gunpla/IMG_2830.JPEG']
+authors: ['namnv2001']
 ---
 
 > A boy can never grow up, their toys only getting more and more expensive.

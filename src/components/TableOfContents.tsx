@@ -49,6 +49,8 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ toc }) => {
     }
   }, [window.location.hash])
 
+  if (!filteredToc.length) return null
+
   return (
     <div>
       <h4 className="font-black mb-2">Table of Contents</h4>
