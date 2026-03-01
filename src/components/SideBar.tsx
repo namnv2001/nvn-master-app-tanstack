@@ -42,7 +42,7 @@ const SideBar = () => {
           <p>
             I'm{' '}
             <Link className="link" to="/about">
-              Nam
+              Nam Nguyen
             </Link>
             , a software engineer.
           </p>
