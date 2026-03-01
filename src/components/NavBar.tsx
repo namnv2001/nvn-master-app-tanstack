@@ -4,25 +4,12 @@ import { useEffect, useState } from 'react'
 
 import { cn } from '@/lib/utils'
 
+import { NAV_ITEMS } from '@/constants'
+
 const NavBar = () => {
   const MOBILE_WIDTH = 550
   const [isMobile, setIsMobile] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
-
-  const navItems = [
-    {
-      label: 'About Me',
-      to: '/about',
-    },
-    {
-      label: 'My Blogs',
-      to: '/blog',
-    },
-    {
-      label: 'Tag',
-      to: '/tag',
-    },
-  ]
 
   useEffect(() => {
     const handleResize = () => {
@@ -34,7 +21,7 @@ const NavBar = () => {
   }, [])
 
   const renderNavItems = () => {
-    return navItems.map((item) => (
+    return NAV_ITEMS.map((item) => (
       <Link
         key={item.label}
         to={item.to}
@@ -47,7 +34,7 @@ const NavBar = () => {
   }
 
   return (
-    <div className="sticky top-0 z-50">
+    <div className="sticky top-0 z-50 bg-background">
       <div className="px-4 py-4 flex items-center justify-between relative">
         <Link to="/" className="font-semibold text-lg">
           Nam Nguyen

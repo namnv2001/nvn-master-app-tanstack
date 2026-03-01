@@ -12,7 +12,7 @@ summary: "I'm not a fan of laptop's keyboard, so I bought this, and boy, it's wo
 I've been a fan of mechanical keyboards for a long time, and I used to use another brand, it's [FL-Esport CMK68 Marshmallow](https://fl-esports.vn/fl-esports-cmk68sam-marshmallow/). The keyboard is gorgeous, I'm in love with the design, the color, the feel, the sound, and everything about it.
 But, after a while, 3 years to be exact, I wanted to try something different, maybe a more ergonomic layout...
 
-That's when I found [Feker Alice 80](https://fekertech.com/products/feker-alice) and decided to give it a try. I chose the kit only version and combine with Gateron linear switches (as far as I remember). 
+That's when I found [Feker Alice 80](https://fekertech.com/products/feker-alice) and decided to give it a try. I chose the kit only version and combine with Gateron linear switches (as far as I remember).
 Now, I'm using it as my primary keyboard, and it's great!
 
 ## What I Like

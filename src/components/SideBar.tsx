@@ -1,25 +1,13 @@
 import { Link, useLocation } from '@tanstack/react-router'
 import { cn } from '@/lib/utils'
 
+import { NAV_ITEMS } from '@/constants'
+
 const SideBar = () => {
   const location = useLocation()
-  const navItems = [
-    {
-      label: 'About Me',
-      to: '/about',
-    },
-    {
-      label: 'My Blogs',
-      to: '/blog',
-    },
-    {
-      label: 'Tag',
-      to: '/tag',
-    },
-  ]
 
   const renderNavItems = () => {
-    return navItems.map((item) => (
+    return NAV_ITEMS.map((item) => (
       <Link
         key={item.label}
         to={item.to}
@@ -42,7 +30,7 @@ const SideBar = () => {
   }
 
   return (
-    <div className="py-4 px-4 border-r border-accent h-screen sticky top-0 bottom-0 shrink-0 max-w-2xs">
+    <div className="p-4 border-r border-accent h-screen sticky top-0 bottom-0 shrink-0 max-w-2xs">
       <Section>
         <Link to="/" className="font-semibold text-lg">
           Nam Nguyen
@@ -50,11 +38,18 @@ const SideBar = () => {
       </Section>
       <Section>
         <h2 className="font-semibold text-lg">About Me</h2>
-        <p className="text-sm">
-          I'm Nam, software engineer.
-          <br />
-          This is my personal space to share my thoughts.
-        </p>
+        <div className="text-sm">
+          <p>
+            I'm{' '}
+            <Link className="link" to="/about">
+              Nam
+            </Link>
+            , a software engineer.
+          </p>
+          <p className="mt-1">
+            This is my personal space to share my thoughts.
+          </p>
+        </div>
       </Section>
       <Section>
         <div className="flex flex-col gap-1">{renderNavItems()}</div>

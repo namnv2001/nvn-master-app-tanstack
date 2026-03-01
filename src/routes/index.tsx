@@ -53,7 +53,7 @@ function App() {
         </p>
         <div className="mt-4">
           {blogs.slice(0, 5).map((blog) => (
-            <ArticleLink key={blog.slug} article={blog} />
+            <ArticleLink key={blog.slug} article={blog} showYear />
           ))}
         </div>
       </div>
@@ -65,7 +65,7 @@ function App() {
         </p>
         <div className="mt-4">
           {gears.map((gear) => (
-            <ArticleLink key={gear.slug} article={gear} />
+            <ArticleLink key={gear.slug} article={gear} showYear />
           ))}
         </div>
       </div>

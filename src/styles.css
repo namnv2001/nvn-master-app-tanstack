@@ -6,9 +6,19 @@
 
 body {
   @apply m-0;
-  font-family: 'Be Vietnam Pro',
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    'Be Vietnam Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    'Oxygen',
+    'Ubuntu',
+    'Cantarell',
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -70,7 +80,7 @@ code {
   /* Chakra UI Gray 200 - Sidebar borders */
   --sidebar-border: oklch(0.92 0.005 250);
   --sidebar-ring: oklch(0.55 0.15 250);
-  --nav-background: rgba(30, 30, 30, .85);
+  --nav-background: rgba(30, 30, 30, 0.85);
   --nav-background-open: rgba(30, 30, 30, 1);
 }
 
@@ -162,8 +172,12 @@ code {
   }
 }
 
+a.link {
+  @apply text-link hover:underline underline-offset-4;
+}
+
 .article-content {
-  pre:has(> code)>code {
+  pre:has(> code) > code {
     @apply block px-4 overflow-x-auto;
   }
 
@@ -192,11 +206,11 @@ code {
   }
 
   p {
-    @apply mb-6 leading-8 text-foreground;
+    @apply mb-4 leading-8 text-foreground;
   }
 
   ul {
-    @apply list-disc list-outside mb-6 space-y-2 ml-6;
+    @apply list-disc list-outside mb-6 space-y-2 ml-6 last-of-type:mb-0;
   }
 
   ol {
@@ -204,7 +218,7 @@ code {
   }
 
   li {
-    @apply leading-7;
+    @apply my-2 leading-6;
   }
 
   blockquote {
