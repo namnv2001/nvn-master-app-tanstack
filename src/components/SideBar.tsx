@@ -33,12 +33,12 @@ const SideBar = () => {
     <div className="p-4 border-r border-accent h-screen sticky top-0 bottom-0 shrink-0 max-w-2xs">
       <Section>
         <Link to="/" className="font-semibold text-lg">
-          Nam Nguyen
+          🫆 Nam Nguyen
         </Link>
       </Section>
       <Section>
         <h2 className="font-semibold text-lg">About Me</h2>
-        <div className="text-sm">
+        <div className="text-sm mt-2">
           <p>
             I'm{' '}
             <Link className="link" to="/about">
@@ -47,7 +47,7 @@ const SideBar = () => {
             , a software engineer.
           </p>
           <p className="mt-1">
-            This is my personal space to share my thoughts.
+            This is my personal space to share my thoughts 💬
           </p>
         </div>
       </Section>
