@@ -9,6 +9,7 @@ import remarkFlexibleToc from 'remark-flexible-toc'
 import remarkGfm from 'remark-gfm'
 import remarkParse from 'remark-parse'
 import { unified } from 'unified'
+import Giscus from '@giscus/react'
 
 import type { TocItem } from 'remark-flexible-toc'
 
@@ -155,6 +156,22 @@ function RouteComponent() {
               ]}
             />
           </div>
+          {/* Comment */}
+          <Giscus
+            id="comments"
+            repo="namnv2001/nvn-master-app-tanstack"
+            repoId="R_kgDOQY5PMw="
+            category="Announcements"
+            categoryId="DIC_kwDOQY5PM84C3iWz"
+            mapping="pathname"
+            term="Welcome to @giscus/react component!"
+            reactionsEnabled="1"
+            emitMetadata="0"
+            inputPosition="top"
+            theme="light"
+            lang="en"
+            loading="lazy"
+          />
         </article>
         {/* Table of Contents */}
         <aside className="hidden xl:block xl:col-span-1 sticky top-8">
