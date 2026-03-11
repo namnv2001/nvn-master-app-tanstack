@@ -36,7 +36,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'namnv2001',
+        title: 'Vawnnam Dev',
       },
     ],
     links: [

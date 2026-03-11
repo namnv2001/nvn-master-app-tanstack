@@ -1,5 +1,6 @@
+import Giscus from '@giscus/react'
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { ArrowUp, Calendar, Clock, User } from 'lucide-react'
+import { ArrowUp, Calendar, Clock, Edit, User } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import Markdown from 'react-markdown'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
@@ -113,6 +114,14 @@ function RouteComponent() {
                 <Calendar size={16} />
                 <time dateTime={blog.date}>{formatDate(blog.date)}</time>
               </div>
+              {blog.lastModified && (
+                <div className="flex items-center gap-2">
+                  <Edit size={16} />
+                  <time dateTime={blog.lastModified}>
+                    {formatDate(blog.lastModified)}
+                  </time>
+                </div>
+              )}
               {readingTime > 0 && (
                 <div className="flex items-center gap-2">
                   <Clock size={16} />
@@ -155,6 +164,22 @@ function RouteComponent() {
               ]}
             />
           </div>
+          {/* Comment */}
+          <Giscus
+            id="comments"
+            repo="namnv2001/nvn-master-app-tanstack"
+            repoId="R_kgDOQY5PMw="
+            category="Announcements"
+            categoryId="DIC_kwDOQY5PM84C3iWz"
+            mapping="pathname"
+            term="Welcome to @giscus/react component!"
+            reactionsEnabled="1"
+            emitMetadata="0"
+            inputPosition="top"
+            theme="light"
+            lang="en"
+            loading="lazy"
+          />
         </article>
         {/* Table of Contents */}
         <aside className="hidden xl:block xl:col-span-1 sticky top-8">
@@ -165,7 +190,7 @@ function RouteComponent() {
           onClick={() => {
             if (isClient) window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
-          className="fixed right-4 bottom-4 z-40 inline-flex items-center justify-center rounded-full bg-primary/70 text-primary-foreground shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background h-12 w-12 cursor-pointer"
+          className="fixed right-4 bottom-4 z-40 inline-flex items-center justify-center rounded-full bg-primary/70 text-foreground shadow-lg hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background h-12 w-12 cursor-pointer"
           aria-label="Back to top"
         >
           <ArrowUp size={20} />

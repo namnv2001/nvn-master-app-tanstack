@@ -29,7 +29,7 @@ function App() {
               href="https://career.teko.vn/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-500 hover:underline"
+              className="text-link hover:underline"
             >
               Teko Solution
             </a>
