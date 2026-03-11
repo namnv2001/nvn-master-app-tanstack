@@ -12,8 +12,8 @@ const SideBar = () => {
         key={item.label}
         to={item.to}
         className={cn(
-          'hover:bg-accent rounded-sm p-2',
-          location.pathname === item.to && 'bg-accent',
+          'hover:bg-secondary rounded-sm p-2',
+          location.pathname === item.to && 'bg-secondary',
         )}
       >
         {item.label}
@@ -23,14 +23,14 @@ const SideBar = () => {
 
   const Section = ({ children }: { children: React.ReactNode }) => {
     return (
-      <div className="py-4 border-b border-accent last:border-b-0">
+      <div className="py-4 border-b border-secondary last:border-b-0">
         {children}
       </div>
     )
   }
 
   return (
-    <div className="p-4 border-r border-accent h-screen sticky top-0 bottom-0 shrink-0 max-w-2xs">
+    <div className="p-4 border-r border-secondary h-screen sticky top-0 bottom-0 shrink-0 max-w-2xs">
       <Section>
         <Link to="/" className="font-semibold text-lg">
           🫆 Nam Nguyen

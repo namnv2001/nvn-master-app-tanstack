@@ -40,7 +40,7 @@ function RouteComponent() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {tags.map((tag) => (
             <div
-              className="border rounded-md p-6 hover:border-accent-foreground cursor-pointer flex justify-between items-center"
+              className="border rounded-md p-6 hover:border-foreground cursor-pointer flex justify-between items-center"
               onClick={() => onClickTag(tag)}
             >
               <span className="text-link">{tag}</span>

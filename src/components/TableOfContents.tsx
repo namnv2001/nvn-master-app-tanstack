@@ -61,9 +61,9 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ toc }) => {
               key={item.href}
               style={{ marginLeft: `${(item.depth - 1) * 1}rem` }}
               className={cn(
-                'hover:bg-accent/50 rounded-sm px-3 font-medium cursor-pointer',
+                'hover:bg-secondary/50 rounded-sm px-3 font-medium cursor-pointer',
                 activeId === item.href.slice(1)
-                  ? 'bg-accent text-link'
+                  ? 'bg-secondary text-link'
                   : 'text-muted-foreground',
               )}
             >

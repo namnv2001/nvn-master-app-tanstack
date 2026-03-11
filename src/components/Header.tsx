@@ -90,12 +90,7 @@ export default function Header() {
   }
 
   return (
-    <NavigationMenu
-      className={cn(
-        'sticky top-0 z-50 w-full bg-nav-background',
-        isOpen && 'bg-nav-background-open',
-      )}
-    >
+    <NavigationMenu className={cn('sticky top-0 z-50 w-full bg-background')}>
       <div className="container max-w-5xl mx-auto px-4 py-4 flex items-center justify-end relative">
         <NavigationMenuList
           className={cn('flex justify-between gap-4', isMobile && 'hidden')}
@@ -122,7 +117,7 @@ export default function Header() {
         {isMobile && isOpen && (
           <div
             ref={mobileMenuRef}
-            className="absolute inset-x-0 top-full bg-nav-background-open/95 shadow-lg backdrop-blur list-none"
+            className="absolute inset-x-0 top-full bg-background/95 shadow-lg backdrop-blur list-none"
           >
             <div className="flex flex-col gap-2 px-4 py-4">
               {renderNavItems(() => setIsOpen(false))}

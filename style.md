@@ -6,235 +6,50 @@ This document outlines common style rules and patterns used throughout the appli
 
 ### Color Palette
 
-The application uses the **Chakra UI** color palette as the foundation for all colors. The palette includes 10 hues, each with 10 tones (50-900):
+The application uses a small set of semantic CSS variables defined in `styles.css` to drive the color system.
 
-#### Available Hues
+#### Core Colors
 
-- **Gray**: Neutral grays for backgrounds, borders, and text
-- **Red**: Destructive actions and errors
-- **Orange**: Warning states
-- **Yellow**: Caution states
-- **Green**: Success states
-- **Teal**: Accent colors
-- **Cyan**: Accent colors
-- **Blue**: Primary actions and links
-- **Purple**: Accent colors
-- **Pink**: Accent colors
+- `--primary`: `#27548A` – primary brand color for links, highlights, and key actions
+- `--secondary`: `#F0E4D3` – secondary surface and accent color
+- `--background`: `#FDFAF6` – main page background
+- `--foreground`: `#222831` – main text color
 
-#### Color Tones
+#### Semantic Colors
 
-Each hue has 10 tones from lightest to darkest:
-
-- `50`: Lightest shade (backgrounds)
-- `100-200`: Very light (muted backgrounds)
-- `300-400`: Light (borders, secondary elements)
-- `500-600`: Medium (primary actions, links)
-- `700-800`: Dark (hover states, emphasis)
-- `900`: Darkest shade (text, foregrounds)
-
-#### Chakra UI Color Palette
-
-```json
-{
-  "name": "Chakra UI",
-  "hues": [
-    {
-      "name": "Gray",
-      "colors": [
-        "#f7fafc",
-        "#edf2f7",
-        "#e2e8f0",
-        "#cbd5e0",
-        "#a0aec0",
-        "#718096",
-        "#4a5568",
-        "#2d3748",
-        "#1a202c",
-        "#171923"
-      ]
-    },
-    {
-      "name": "Red",
-      "colors": [
-        "#fff5f5",
-        "#fed7d7",
-        "#feb2b2",
-        "#fc8181",
-        "#f56565",
-        "#e53e3e",
-        "#c53030",
-        "#9b2c2c",
-        "#822727",
-        "#63171b"
-      ]
-    },
-    {
-      "name": "Orange",
-      "colors": [
-        "#fffaf0",
-        "#feebc8",
-        "#fbd38d",
-        "#f6ad55",
-        "#ed8936",
-        "#dd6b20",
-        "#c05621",
-        "#9c4221",
-        "#7b341e",
-        "#652b19"
-      ]
-    },
-    {
-      "name": "Yellow",
-      "colors": [
-        "#fffff0",
-        "#fefcbf",
-        "#faf089",
-        "#f6e05e",
-        "#ecc94b",
-        "#d69e2e",
-        "#b7791f",
-        "#975a16",
-        "#744210",
-        "#5f370e"
-      ]
-    },
-    {
-      "name": "Green",
-      "colors": [
-        "#f0fff4",
-        "#c6f6d5",
-        "#9ae6b4",
-        "#68d391",
-        "#48bb78",
-        "#38a169",
-        "#2f855a",
-        "#276749",
-        "#22543d",
-        "#1c4532"
-      ]
-    },
-    {
-      "name": "Teal",
-      "colors": [
-        "#e6fffa",
-        "#b2f5ea",
-        "#81e6d9",
-        "#4fd1c5",
-        "#38b2ac",
-        "#319795",
-        "#2c7a7b",
-        "#285e61",
-        "#234e52",
-        "#1d4044"
-      ]
-    },
-    {
-      "name": "Cyan",
-      "colors": [
-        "#edfdfd",
-        "#c4f1f9",
-        "#9decf9",
-        "#76e4f7",
-        "#0bc5ea",
-        "#00b5d8",
-        "#00a3c4",
-        "#0987a0",
-        "#086f83",
-        "#065666"
-      ]
-    },
-    {
-      "name": "Blue",
-      "colors": [
-        "#ebf8ff",
-        "#bee3f8",
-        "#90cdf4",
-        "#63b3ed",
-        "#4299e1",
-        "#3182ce",
-        "#2b6cb0",
-        "#2c5282",
-        "#2a4365",
-        "#1a365d"
-      ]
-    },
-    {
-      "name": "Purple",
-      "colors": [
-        "#faf5ff",
-        "#e9d8fd",
-        "#d6bcfa",
-        "#b794f4",
-        "#9f7aea",
-        "#805ad5",
-        "#6b46c1",
-        "#553c9a",
-        "#44337a",
-        "#322659"
-      ]
-    },
-    {
-      "name": "Pink",
-      "colors": [
-        "#fff5f7",
-        "#fed7e2",
-        "#fbb6ce",
-        "#f687b3",
-        "#ed64a6",
-        "#d53f8c",
-        "#b83280",
-        "#97266d",
-        "#702459",
-        "#521b41"
-      ]
-    }
-  ],
-  "tones": ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"]
-}
-```
+- `--muted`: `#FDFAF6BF` – subtle background elements (75% of background)
+- `--muted-foreground`: `#222831BF` – muted text (75% of foreground)
+- `--link`: `var(--primary)` – link color
+- `--border`: `var(--secondary)` – default border color
 
 ### CSS Variables
 
-The application uses CSS variables defined in `styles.css` for consistent theming. All colors use the `oklch` color space and are based on the Chakra UI palette.
+The application uses CSS variables defined in `styles.css` for consistent theming. Colors are defined as hex values and exposed via semantic tokens.
 
 #### Light Mode Colors
 
 - `--background`: Main background color
 - `--foreground`: Main text color
-- `--card`: Card background
-- `--card-foreground`: Card text color
 - `--primary`: Primary brand color
-- `--primary-foreground`: Text on primary background
-- `--secondary`: Secondary color
-- `--secondary-foreground`: Text on secondary background
+- `--secondary`: Secondary color and borders
 - `--muted`: Muted/subtle backgrounds
 - `--muted-foreground`: Muted text color
-- `--accent`: Accent color
-- `--accent-foreground`: Text on accent background
-- `--destructive`: Error/destructive actions
-- `--destructive-foreground`: Text on destructive background
-- `--border`: Border color
-- `--input`: Input border color
-- `--ring`: Focus ring color
 - `--link`: Link color
+- `--border`: Border color
 
 #### Dark Mode
 
-All colors have corresponding dark mode variants defined in `.dark` class. The dark mode automatically inverts the color scheme.
+All core color variables have corresponding values defined inside the `.dark` class, so using semantic tokens (like `bg-background`, `text-foreground`, `text-link`) automatically adapts to dark mode. (inferred)
 
 ### Usage in Tailwind
 
 Colors are accessible via Tailwind classes:
 
 - `bg-background`, `text-foreground`
-- `bg-card`, `text-card-foreground`
-- `bg-primary`, `text-primary-foreground`
-- `bg-secondary`, `text-secondary-foreground`
+- `bg-primary`
+- `bg-secondary`
 - `bg-muted`, `text-muted-foreground`
-- `bg-accent`, `text-accent-foreground`
-- `bg-destructive`, `text-destructive-foreground`
 - `border-border`
-- `border-input`
 - `ring-ring`
 - `text-link`
 

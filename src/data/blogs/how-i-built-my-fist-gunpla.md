@@ -1,7 +1,7 @@
 ---
 title: 'How I Built My First Gunpla'
 date: '2026-02-01'
-lastModified: '2026-22-02'
+lastModified: '2026-02-22'
 tags: ['gunpla', 'hobby', 'life']
 draft: false
 summary: 'I built my first Gunpla and it was a blast!'

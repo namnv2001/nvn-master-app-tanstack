@@ -19,7 +19,7 @@ export const ArticleLink: React.FC<ArticleLinkProps> = ({
       to="/blog/$blogId"
       params={{ blogId: article.slug }}
       className={cn(
-        'border-b border-accent last:border-b-0 p-2 hover:bg-accent flex md:items-center flex-col md:flex-row',
+        'border-b border-secondary last:border-b-0 p-2 hover:bg-secondary flex md:items-center flex-col md:flex-row',
       )}
     >
       <p
