@@ -30,29 +30,29 @@ code {
 
 :root {
   /* Color for links, primary elements, etc. */
-  --primary: #27548A;
+  --primary: #5478FF;
   /* Color for hovering states, secondary elements, etc. */
   --secondary: #F0E4D3;
   --background: #FDFAF6;
   /* Color for text */
-  --foreground: #222831;
+  --foreground: #2C2C2C;
   --muted: #FDFAF6BF; /* 75% background */
-  --muted-foreground: #222831BF; /* 75% foreground */
+  --muted-foreground: #2C2C2CBF; /* 75% foreground */
   --link: var(--primary);
-  --border: var(--secondary);
+  --border: var(--primary);
 }
 
 .dark {
   /* Color for links, primary elements, etc. */
-  --primary: #27548A;
+  --primary: #5478FF;
   /* Color for hovering states, secondary elements, etc. */
   --secondary: #F0E4D3;
   --background: #FDFAF6;
   /* Color for text */
-  --foreground: #222831;
+  --foreground: #2C2C2C;
   --muted: #FDFAF6BF;
   /* 75% background */
-  --muted-foreground: #222831BF;
+  --muted-foreground: #2C2C2CBF;
   /* 75% foreground */
   --link: var(--primary);
   --border: var(--secondary);

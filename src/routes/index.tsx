@@ -18,7 +18,7 @@ function App() {
       <div className="xl:flex items-start gap-4">
         <div className="md:flex-1/2">
           <h1 className="text-5xl font-bold">Hey, I'm Nam!</h1>
-          <p className="text-lg mt-6">
+          <p className="text-lg my-6">
             I'm a junior frontend software engineer.
             <br />
             I've been working in the industry for nearly <strong>4</strong>{' '}

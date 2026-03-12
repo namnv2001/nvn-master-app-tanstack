@@ -17,7 +17,7 @@ export const Footer = () => {
       <div className="px-4 py-8">
         <p className="text-sm text-muted-foreground pt-8 flex flex-col items-center justify-center gap-4">
           <div className="flex items-center justify-center gap-8">
-            {renderSocial('https://facebook.com/vn.120901', <Facebook />)}
+            {renderSocial('https://facebook.com/vawnnam.1209', <Facebook />)}
             {renderSocial('https://github.com/namnv2001', <Github />)}
             {renderSocial('https://linkedin.com/in/namnv2001', <Linkedin />)}
           </div>

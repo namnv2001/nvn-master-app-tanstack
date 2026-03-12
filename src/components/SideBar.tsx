@@ -33,7 +33,7 @@ const SideBar = () => {
     <div className="p-4 border-r border-secondary h-screen sticky top-0 bottom-0 shrink-0 max-w-2xs">
       <Section>
         <Link to="/" className="font-semibold text-lg">
-          🫆 Nam Nguyen
+          🫆 Vawnnam
         </Link>
       </Section>
       <Section>
