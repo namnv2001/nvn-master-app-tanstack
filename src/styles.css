@@ -28,46 +28,50 @@ code {
     source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+/* LIGHT MODE
+    Background primary : #FFFFFF  — main page surface
+    Background secondary: #F5F4F0 — cards, inputs, chips
+    Text primary       : #1A1917  — headings, strong text
+    Text secondary     : #7A7772  — labels, metadata, muted
+    Border             : rgba(26,25,23,0.10) — subtle dividers
+    Accent             : #1A1917  — nav active, buttons, links
+*/
 :root {
-  /* Color for links, primary elements, etc. */
-  --primary: #5478FF;
-  /* Color for hovering states, secondary elements, etc. */
-  --secondary: #F0E4D3;
-  --background: #FDFAF6;
-  /* Color for text */
-  --foreground: #2C2C2C;
-  --muted: #FDFAF6BF; /* 75% background */
-  --muted-foreground: #2C2C2CBF; /* 75% foreground */
-  --link: var(--primary);
-  --border: var(--primary);
+  --background: #FFFFFF;
+  --secondary-background: #F5F4F0;
+  --toggle-background: #E8E7E3;
+  --primary: #1A1917;
+  --muted: #7A7772;
+  --border: rgba(26, 25, 23, 0.10);
+  --accent: #1A1917;
 }
 
+/* DARK MODE
+    Background primary : #111110  — main page surface
+    Background secondary: #1C1C1A — cards, inputs, chips
+    Text primary       : #EDECEA  — headings, strong text
+    Text secondary     : #6B6965  — labels, metadata, muted
+    Border             : rgba(237,236,234,0.10) — subtle dividers
+    Accent             : #EDECEA  — nav active, buttons, links
+*/
 .dark {
-  /* Color for links, primary elements, etc. */
-  --primary: #5478FF;
-  /* Color for hovering states, secondary elements, etc. */
-  --secondary: #F0E4D3;
-  --background: #FDFAF6;
-  /* Color for text */
-  --foreground: #2C2C2C;
-  --muted: #FDFAF6BF;
-  /* 75% background */
-  --muted-foreground: #2C2C2CBF;
-  /* 75% foreground */
-  --link: var(--primary);
-  --border: var(--secondary);
+  --background: #111110;
+  --secondary-background: #1C1C1A;
+  --toggle-background: #2A2A28;
+  --primary: #EDECEA;
+  --muted: #6B6965;
+  --border: rgba(237, 236, 234, 0.10);
+  --accent: #EDECEA;
 }
 
 @theme inline {
-  --color-primary: var(--primary);
-  --color-secondary: var(--secondary);
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-secondary-background: var(--secondary-background);
+  --color-toggle-background: var(--toggle-background);
+  --color-primary: var(--primary);
   --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-ring: var(--ring);
   --color-border: var(--border);
-  --color-link: var(--link);
+  --color-accent: var(--accent);
 }
 
 @layer base {
@@ -76,17 +80,17 @@ code {
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-primary;
   }
 }
 
 a.link {
-  @apply text-link hover:underline underline-offset-4;
+  @apply text-accent hover:underline underline-offset-4;
 }
 
 .article-content {
   pre:has(> code) > code {
-    @apply block px-4 overflow-x-auto;
+    @apply block overflow-x-auto;
   }
 
   h1 {
@@ -114,7 +118,7 @@ a.link {
   }
 
   p {
-    @apply mb-4 leading-8 text-foreground;
+    @apply mb-4 leading-8 text-primary;
   }
 
   ul {
@@ -130,15 +134,40 @@ a.link {
   }
 
   blockquote {
-    @apply border-l-4 border-primary pl-6 italic my-6 text-muted-foreground bg-muted/50 py-4 rounded-r-lg;
+    @apply border-l-2 border-primary pl-6 my-6 text-muted bg-secondary-background py-4 rounded-r-lg;
+
+    p {
+      @apply font-serif text-lg text-muted my-0;
+    }
   }
 
   code {
-    @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono text-foreground before:content-[''] after:content-[''];
+    @apply bg-secondary-background border border-border px-1.5 py-0.5 rounded text-sm font-mono text-primary before:content-[''] after:content-[''];
   }
 
   pre {
-    @apply bg-muted p-6 rounded-xl my-6 overflow-x-auto border border-border;
+    @apply bg-secondary-background p-2 rounded-xl my-6 overflow-x-auto border border-border;
+
+    code {
+      @apply border-none;
+    }
+
+    /* Style the entire scrollbar */
+    ::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    /* Style the thumb */
+    ::-webkit-scrollbar-thumb {
+      background: var(--muted);
+      border-radius: 5px;
+    }
+
+    /* Style the track */
+    ::-webkit-scrollbar-track {
+      background: var(--toggle-background);
+      border-radius: 10px;
+    }
   }
 
   hr {
@@ -154,7 +183,7 @@ a.link {
   }
 
   tr {
-    @apply border-b border-border hover:bg-muted/50 transition-colors;
+    @apply border-b border-border hover:bg-secondary-background transition-colors;
   }
 
   th {
@@ -166,11 +195,11 @@ a.link {
   }
 
   strong {
-    @apply font-bold text-foreground;
+    @apply font-bold text-primary;
   }
 
   em {
-    @apply italic;
+    @apply italic text-muted;
   }
 
   img {
@@ -178,6 +207,10 @@ a.link {
   }
 
   a {
-    @apply text-link hover:underline underline-offset-4;
+    @apply text-accent hover:underline underline-offset-4;
+  }
+
+  del {
+    @apply line-through text-muted italic;
   }
 }

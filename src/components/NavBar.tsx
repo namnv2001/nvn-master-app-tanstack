@@ -1,32 +1,21 @@
 import { Link } from '@tanstack/react-router'
-import { List, ListXIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
 
-import { cn } from '@/lib/utils'
-
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { NAV_ITEMS } from '@/constants'
 
-const NavBar = () => {
-  const MOBILE_WIDTH = 550
-  const [isMobile, setIsMobile] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
+type NavBarProps = {
+  setTheme: (theme: string) => void
+}
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < MOBILE_WIDTH)
-    }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
+const NavBar = ({ setTheme }: NavBarProps) => {
   const renderNavItems = () => {
     return NAV_ITEMS.map((item) => (
       <Link
         key={item.label}
         to={item.to}
-        className={cn(isMobile && 'my-4')}
-        {...(isMobile ? { onClick: () => setIsOpen(false) } : {})}
+        className={`cursor-pointer text-[13px] transition-colors hover:text-accent ${
+          location.pathname === item.to ? 'text-accent' : 'text-muted'
+        }`}
       >
         {item.label}
       </Link>
@@ -34,38 +23,17 @@ const NavBar = () => {
   }
 
   return (
-    <div className="sticky top-0 z-50 bg-background">
-      <div className="px-4 py-4 flex items-center justify-between relative">
-        <Link to="/" className="font-semibold text-lg">
-          Nam Nguyen
-        </Link>
-        <div className={cn('flex justify-between gap-4', isMobile && 'hidden')}>
-          {renderNavItems()}
+    <header className="pb-8 pt-4 border-b border-border/60">
+      <nav className="flex items-center justify-between">
+        <div className="flex items-center gap-8">
+          <Link to="/" className="font-mono text-[16px] font-bold">
+            vawnnam.blog
+          </Link>
+          <div className="flex gap-6 text-xs">{renderNavItems()}</div>
         </div>
-
-        <div className={cn('ml-auto', !isMobile && 'hidden')}>
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-md p-2 focus:outline-none focus:ring-2"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? (
-              <ListXIcon className="size-7" />
-            ) : (
-              <List className="size-7" />
-            )}
-          </button>
-        </div>
-        {/* Mobile menu content */}
-        {isMobile && isOpen && (
-          <div className="absolute inset-x-0 top-full h-screen shadow-lg bg-background/80 backdrop-blur list-none">
-            <div className="flex flex-col gap-2 px-4 py-4">
-              {renderNavItems()}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+        <ThemeToggle setTheme={setTheme} />
+      </nav>
+    </header>
   )
 }
 

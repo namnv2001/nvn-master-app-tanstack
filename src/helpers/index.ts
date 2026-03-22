@@ -1,6 +1,7 @@
 import matter from 'gray-matter'
 
 import type { Article } from '@/types'
+import { Theme } from '@/constants'
 
 export const formatDate = (
   date: string,
@@ -48,6 +49,30 @@ export const calculateReadingTime = (content: string): number => {
 }
 
 export const isClient = () => typeof window !== 'undefined'
+
+const THEME_KEY = 'theme'
+
+export const getTheme = () => {
+  if (!isClient()) return ''
+
+  try {
+    const theme = localStorage.getItem(THEME_KEY)
+    return theme || Theme.LIGHT
+  } catch (error) {
+    console.error('Failed to get theme:', error)
+    return Theme.LIGHT
+  }
+}
+
+export const setTheme = (theme: string) => {
+  if (!isClient()) return
+
+  try {
+    localStorage.setItem(THEME_KEY, theme)
+  } catch (error) {
+    console.error('Failed to set theme:', error)
+  }
+}
 
 const READ_STATUS_KEY = 'blog-read-status'
 

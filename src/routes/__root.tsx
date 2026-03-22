@@ -6,7 +6,7 @@ import {
   useLocation,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
@@ -14,11 +14,10 @@ import appCss from '../styles.css?url'
 import type { QueryClient } from '@tanstack/react-query'
 
 import { Footer } from '@/components/Footer'
-import NavBar from '@/components/NavBar'
-import SideBar from '@/components/SideBar'
-import { isClient } from '@/helpers'
-import { cn } from '@/lib/utils'
 import Loading from '@/components/Loading'
+import NavBar from '@/components/NavBar'
+import { getTheme, isClient } from '@/helpers'
+import { Theme } from '@/constants'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -56,32 +55,14 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function RootDocument({ children }: { children: React.ReactNode }) {
   const { isClient: _isClient } = Route.useRouteContext()
   const location = useLocation()
-
-  const [showSideBar, setShowSideBar] = useState(true)
+  const [theme, setTheme] = useState<string | Theme>(Theme.DARK)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!_isClient) return
-
-    const resizeHandler = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const { width } = entry.contentRect
-        if (width < 1024) {
-          setShowSideBar(false)
-        } else {
-          setShowSideBar(true)
-        }
-      }
-    })
-    resizeHandler.observe(document.body)
-
-    return () => resizeHandler.disconnect()
-  }, [_isClient])
-
-  useEffect(() => {
-    if (!_isClient) return
+    setTheme(getTheme())
     setLoading(false)
-  }, [_isClient])
+  }, [_isClient, theme])
 
   return (
     <html lang="en">
@@ -98,16 +79,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           rel="stylesheet"
         />
       </head>
-      <body className="bg-background">
+      <body className={`bg-background ${theme}`}>
         {loading ? (
           <Loading />
         ) : (
-          <div className={cn(showSideBar && 'flex container mx-auto')}>
-            {showSideBar ? <SideBar /> : <NavBar />}
-            <div className="py-8 w-full">
-              <div className="px-4 xl:pl-16">{children}</div>
-              <Footer />
-            </div>
+          <div className="mx-auto p-4 max-w-3xl">
+            <NavBar setTheme={setTheme} />
+            <main className="mt-10">{children}</main>
+            <Footer />
           </div>
         )}
         <TanStackDevtools
