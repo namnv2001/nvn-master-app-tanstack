@@ -1,7 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useEffect, useMemo, useRef, useState } from 'react'
-
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Search } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import z from 'zod'
 
 import { BlogCard } from '@/components/BlogCard'
 import { Input } from '@/components/ui/input'
@@ -13,12 +13,18 @@ export const Route = createFileRoute('/blog/')({
   ssr: 'data-only',
   component: BlogList,
   loader: async () => await getAllArticles(),
+  validateSearch: z.object({
+    tag: z.string().optional(),
+  }),
 })
 
 function BlogList() {
   const { blogs, gears } = Route.useLoaderData()
+  const { tag: searchParamTag } = Route.useSearch()
+  const navigate = useNavigate()
+
   const searchRef = useRef<HTMLInputElement>(null)
-  const [activeTag, setActiveTag] = useState('all')
+  const [activeTag, setActiveTag] = useState(searchParamTag ?? 'all')
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredArticles, setFilteredArticles] = useState([...blogs, ...gears])
 
@@ -64,6 +70,10 @@ function BlogList() {
   }, [])
 
   useEffect(() => {
+    navigate({
+      to: '/blog',
+      search: { tag: activeTag },
+    })
     onFilterBlogs(searchQuery)
   }, [activeTag])
 

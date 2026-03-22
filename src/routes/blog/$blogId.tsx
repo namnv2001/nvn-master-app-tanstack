@@ -166,8 +166,8 @@ function RouteComponent() {
                 <div className="flex flex-wrap gap-x-4 mt-2 justify-end">
                   {blog.tags.map((tag) => (
                     <Link
-                      to="/tag/$tagId"
-                      params={{ tagId: tag }}
+                      to="/blog"
+                      search={{ tag }}
                       key={tag}
                       className="text-[11px] font-mono uppercase tracking-widest transition-colors text-muted hover:text-primary cursor-pointer"
                     >
