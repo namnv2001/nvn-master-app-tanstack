@@ -208,6 +208,11 @@ a.link {
 
   a {
     @apply text-accent hover:underline underline-offset-4;
+
+    .autolink-svg {
+      display: inline-block;
+      margin-left: 0.5rem;
+    }
   }
 
   del {
