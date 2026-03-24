@@ -5,7 +5,7 @@ lastModified: '2025-03-08'
 tags: ['life', 'travel']
 draft: false
 summary: 'Traveling with friends after Tet holiday that gives me chill, and make me rethink about life'
-authors: ['namnv2001']
+authors: ['vawnnam']
 images: ['/static/images/traveling-to-si-thau-chai/DSCF1064.JPG']
 ---
 

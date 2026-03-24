@@ -2,7 +2,7 @@
 title: 'My Life Update'
 date: '2026-03-01'
 lastModified: '2026-03-01'
-authors: ['namnv2001']
+authors: ['vawnnam']
 tags: ['life']
 draft: false
 summary: 'How am I doing with my life'

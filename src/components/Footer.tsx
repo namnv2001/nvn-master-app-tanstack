@@ -1,28 +1,28 @@
-import { Facebook, Github, Linkedin } from 'lucide-react'
+import { SOCIAL_LINKS } from '@/constants'
 
 export const Footer = () => {
-  const renderSocial = (url: string, icon: React.ReactNode) => {
+  const renderSocial = (link: { to: string; label: string }) => {
     return (
       <a
-        href={url}
+        href={link.to}
         target="_blank"
-        className="text-muted-foreground hover:text-foreground transition-colors"
+        className="text-muted hover:text-primary transition-colors underline underline-offset-4 decoration-toggle-background"
       >
-        {icon}
+        {link.label}
       </a>
     )
   }
+
   return (
-    <footer className="border-t border-secondary mt-8 block">
-      <div className="px-4 py-8">
-        <p className="text-sm text-muted-foreground pt-8 flex flex-col items-center justify-center gap-4">
-          <div className="flex items-center justify-center gap-8">
-            {renderSocial('https://facebook.com/vn.120901', <Facebook />)}
-            {renderSocial('https://github.com/namnv2001', <Github />)}
-            {renderSocial('https://linkedin.com/in/namnv2001', <Linkedin />)}
-          </div>
-          <span>Made with ❤️ by Nam Nguyen</span>
-        </p>
+    <footer className="mt-8 mb-2 block font-mono text-[12px] text-muted">
+      <p className="uppercase tracking-widest border-b border-toggle-background pb-2 mb-5">
+        Find me
+      </p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          {SOCIAL_LINKS.map(renderSocial)}
+        </div>
+        <p> {new Date().getFullYear()} &copy; vawnnam</p>
       </div>
     </footer>
   )

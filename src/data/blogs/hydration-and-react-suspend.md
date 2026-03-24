@@ -1,6 +1,6 @@
 ---
 title: 'Hydration and React <Suspend />'
-authors: ['namnv2001']
+authors: ['vawnnam']
 summary: "Recently, I've been working with CWV and bumped in this whole hydration thing"
 date: '2026-03-01'
 lastModified: '2026-03-01'
