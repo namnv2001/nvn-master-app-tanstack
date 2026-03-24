@@ -142,7 +142,7 @@ function RouteComponent() {
                 <User size={16} />
                 {blog.authors && blog.authors.length > 0
                   ? blog.authors.join(', ')
-                  : 'Author'}
+                  : 'vawnnam'}
               </span>
               {readingTime > 0 && (
                 <span className="font-mono text-[11px] text-muted">
@@ -233,7 +233,7 @@ function RouteComponent() {
                   >
                     {related.tags.length > 0 && (
                       <p className="post-tag mb-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">
-                        {related.tags[0]}
+                        {related.tags.slice(0, 2).join(' • ')}
                       </p>
                     )}
                     <p className="post-title mb-1 text-sm font-medium">

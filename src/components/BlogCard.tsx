@@ -16,7 +16,7 @@ export const BlogCard = ({ article }: { article: Article }) => {
       <div>
         {article.tags.length > 0 && (
           <p className="mb-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted">
-            {article.tags[0]}
+            {article.tags.slice(0, 3).join(' • ')}
           </p>
         )}
         <div className="flex items-center gap-2 mb-1">

@@ -13,8 +13,8 @@ const NavBar = ({ setTheme }: NavBarProps) => {
       <Link
         key={item.label}
         to={item.to}
-        className={`cursor-pointer text-[13px] transition-colors hover:text-accent ${
-          location.pathname === item.to ? 'text-accent' : 'text-muted'
+        className={`cursor-pointer text-[13px] transition-colors hover:text-primary ${
+          location.pathname === item.to ? 'text-primary' : 'text-muted'
         }`}
       >
         {item.label}

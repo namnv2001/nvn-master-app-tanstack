@@ -76,12 +76,8 @@ body {
   }
 }
 
-a.link {
-  @apply text-accent hover:underline underline-offset-4;
-}
-
 .article-content {
-  @apply font-light font-sans;
+  @apply font-sans;
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif font-bold;
@@ -132,7 +128,7 @@ a.link {
   }
 
   blockquote {
-    @apply border-l-2 border-primary pl-6 my-6 text-muted bg-secondary-background py-4 rounded-r-lg;
+    @apply border-l-2 border-accent pl-6 my-6 text-muted bg-secondary-background py-4 rounded-r-lg;
 
     p {
       @apply font-serif text-lg text-muted my-0;
@@ -140,7 +136,7 @@ a.link {
   }
 
   code {
-    @apply bg-secondary-background border border-border px-1.5 py-0.5 rounded text-sm font-mono text-primary before:content-[''] after:content-[''];
+    @apply bg-secondary-background border border-border px-1.5 py-0.5 rounded text-sm font-mono text-accent before:content-[''] after:content-[''];
   }
 
   pre {

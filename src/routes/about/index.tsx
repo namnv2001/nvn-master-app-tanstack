@@ -17,12 +17,10 @@ function RouteComponent() {
 
   return (
     <div>
-      <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-3">
+      <h1 className="text-4xl font-serif font-bold md:text-5xl tracking-tight mb-3">
         About Me
       </h1>
-      <p className="text-muted-foreground text-lg">
-        Who am I, what am I doing.
-      </p>
+      <p className="text-muted tracking-wide">Who am I, what am I doing.</p>
       <article className="article-content mt-8">
         <Markdown
           children={aboutContent.content || ''}
