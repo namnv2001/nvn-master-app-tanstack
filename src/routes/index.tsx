@@ -49,7 +49,7 @@ function App() {
           <p className="mb-3 font-mono text-[11px] uppercase tracking-widest text-muted">
             Latest post
           </p>
-          <p className="mb-2 font-serif text-2xl leading-[1.2]">
+          <p className="mb-2 font-serif font-medium text-2xl leading-[1.2]">
             {featured.title}
           </p>
           {featured.summary && (

@@ -124,7 +124,7 @@ function RouteComponent() {
           )}
 
           {/* Title */}
-          <h1 className="mb-4 font-serif text-[clamp(1.9rem,4vw,2.7rem)] leading-tight">
+          <h1 className="mb-4 font-serif font-bold text-[clamp(1.9rem,4vw,2.7rem)] leading-tight">
             {blog.title}
           </h1>
 

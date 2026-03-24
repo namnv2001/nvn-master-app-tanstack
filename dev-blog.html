@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>dev.blog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /* ── COLOR SCHEMES ───────────────────────────────────────── */
+
+  /* LIGHT MODE
+     Background primary : #FFFFFF  — main page surface
+     Background secondary: #F5F4F0 — cards, inputs, chips
+     Text primary       : #1A1917  — headings, strong text
+     Text secondary     : #7A7772  — labels, metadata, muted
+     Border             : rgba(26,25,23,0.10) — subtle dividers
+     Accent             : #1A1917  — nav active, buttons, links
+  */
+  [data-theme="light"] {
+    --bg:        #FFFFFF;
+    --bg2:       #F5F4F0;
+    --ink:       #1A1917;
+    --muted:     #7A7772;
+    --border:    rgba(26,25,23,0.10);
+    --accent:    #1A1917;
+    --toggle-bg: #E8E7E3;
+  }
+
+  /* DARK MODE
+     Background primary : #111110  — main page surface
+     Background secondary: #1C1C1A — cards, inputs, chips
+     Text primary       : #EDECEA  — headings, strong text
+     Text secondary     : #6B6965  — labels, metadata, muted
+     Border             : rgba(237,236,234,0.10) — subtle dividers
+     Accent             : #EDECEA  — nav active, buttons, links
+  */
+  [data-theme="dark"] {
+    --bg:        #111110;
+    --bg2:       #1C1C1A;
+    --ink:       #EDECEA;
+    --muted:     #6B6965;
+    --border:    rgba(237,236,234,0.10);
+    --accent:    #EDECEA;
+    --toggle-bg: #2A2A28;
+  }
+
+  /* ── RESET & BASE ────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    transition: background 0.25s, color 0.25s;
+    min-height: 100vh;
+  }
+
+  /* ── LAYOUT ──────────────────────────────────────────────── */
+  .blog { max-width: 780px; margin: 0 auto; padding: 2rem 1.25rem; }
+
+  /* ── NAV ─────────────────────────────────────────────────── */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 2.5rem;
+  }
+  .nav-left { display: flex; align-items: center; gap: 2rem; }
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .nav-links { display: flex; gap: 1.5rem; }
+  .nav-links a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+
+  /* ── DARK MODE TOGGLE ────────────────────────────────────── */
+  .toggle {
+    width: 40px; height: 22px;
+    border-radius: 999px;
+    background: var(--toggle-bg);
+    border: 0.5px solid var(--border);
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle-thumb {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--ink);
+    transition: transform 0.2s, background 0.2s;
+  }
+  [data-theme="dark"] .toggle-thumb { transform: translateX(18px); }
+  .toggle-icon {
+    font-size: 11px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  [data-theme="light"] .toggle-icon { right: 6px; }
+  [data-theme="dark"]  .toggle-icon { left: 6px; }
+
+  /* ── PAGES ───────────────────────────────────────────────── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── HERO ────────────────────────────────────────────────── */
+  .hero { margin-bottom: 3rem; }
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+  .hero p { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 520px; }
+
+  /* ── SECTION LABEL ───────────────────────────────────────── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  /* ── POST CARDS ──────────────────────────────────────────── */
+  .posts-grid { display: grid; gap: 0; }
+  .post-card {
+    padding: 1.25rem 0;
+    border-bottom: 0.5px solid var(--border);
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: start;
+  }
+  .post-card:hover .post-title { color: var(--muted); }
+  .post-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .post-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.4;
+    transition: color 0.15s;
+    margin-bottom: 0.3rem;
+  }
+  .post-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .post-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    margin-top: 0.2rem;
+  }
+
+  /* ── FEATURED ────────────────────────────────────────────── */
+  .featured {
+    background: var(--bg2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+    cursor: pointer;
+    border: 0.5px solid var(--border);
+    transition: background 0.2s;
+  }
+  .featured:hover { background: var(--toggle-bg); }
+  .feat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .feat-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 0.6rem;
+  }
+  .feat-desc { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 1rem; }
+  .feat-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .read-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 1px;
+  }
+
+  /* ── SEARCH ──────────────────────────────────────────────── */
+  .search-wrap { position: relative; margin-bottom: 1rem; }
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 14px;
+    pointer-events: none;
+    font-family: 'DM Mono', monospace;
+  }
+  #search-input {
+    width: 100%;
+    padding: 9px 12px 9px 34px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg2);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s, background 0.2s;
+  }
+  #search-input:focus { border-color: var(--muted); }
+  #search-input::placeholder { color: var(--muted); }
+  .search-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+    min-height: 1.2em;
+  }
+  .no-results {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    padding: 2rem 0;
+    text-align: center;
+    display: none;
+  }
+
+  /* ── FILTERS ─────────────────────────────────────────────── */
+  .filter-row { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .filter-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 0.5px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  /* ── HIGHLIGHT ───────────────────────────────────────────── */
+  mark { background: transparent; color: var(--ink); font-weight: 500; }
+
+  /* ── ABOUT ───────────────────────────────────────────────── */
+  .about-grid { display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: start; margin-bottom: 2.5rem; }
+  .avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .about-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+  .about-role {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+  .about-bio { font-size: 15px; color: var(--muted); line-height: 1.75; margin-bottom: 2rem; }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+  }
+  .skill-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: var(--bg2);
+    color: var(--muted);
+    border: 0.5px solid var(--border);
+  }
+  .social-links { display: flex; gap: 1rem; }
+  .social-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 0.5px solid var(--border);
+    padding-bottom: 1px;
+    transition: color 0.15s;
+  }
+  .social-links a:hover { color: var(--ink); }
+
+  /* ── READING PROGRESS BAR ────────────────────────────────── */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    width: 0%;
+    background: var(--ink);
+    transition: width 0.1s linear, background 0.25s;
+    z-index: 100;
+  }
+
+  /* ── ARTICLE DETAIL ──────────────────────────────────────── */
+  .article-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    margin-bottom: 2.5rem;
+    text-decoration: none;
+    transition: color 0.15s;
+    border: none;
+    background: none;
+    padding: 0;
+  }
+  .article-back:hover { color: var(--ink); }
+
+  .article-header { margin-bottom: 2.5rem; }
+  .article-header .post-tag { margin-bottom: 0.75rem; }
+  .article-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+  .article-subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 1.5rem;
+    max-width: 580px;
+  }
+  .article-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .article-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .article-byline { flex: 1; }
+  .article-byline-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    display: block;
+  }
+  .article-byline-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .article-read-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ── PROSE BODY ──────────────────────────────────────────── */
+  .article-body {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--ink);
+    max-width: 640px;
+  }
+  .article-body p { margin-bottom: 1.5rem; }
+  .article-body h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--ink);
+    margin: 2.5rem 0 1rem;
+    line-height: 1.2;
+  }
+  .article-body h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 2rem 0 0.75rem;
+    letter-spacing: 0.01em;
+  }
+  .article-body ul, .article-body ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .article-body li { margin-bottom: 0.4rem; color: var(--ink); }
+  .article-body a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .article-body strong { font-weight: 500; }
+  .article-body em { font-style: italic; color: var(--muted); }
+
+  /* inline code */
+  .article-body code {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: var(--ink);
+  }
+
+  /* code block */
+  .article-body pre {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+  .article-body pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  /* blockquote */
+  .article-body blockquote {
+    border-left: 2px solid var(--muted);
+    margin: 2rem 0;
+    padding: 0.25rem 0 0.25rem 1.5rem;
+  }
+  .article-body blockquote p {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 0;
+  }
+
+  /* ── ARTICLE FOOTER ──────────────────────────────────────── */
+  .article-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 0.5px solid var(--border);
+  }
+  .article-footer .section-label { margin-bottom: 1.25rem; }
+  .related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 500px) { .related-grid { grid-template-columns: 1fr; } }
+  .related-card {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .related-card:hover { background: var(--toggle-bg); }
+  .related-card .post-tag { margin-bottom: 0.35rem; }
+  .related-card .post-title { font-size: 14px; margin-bottom: 0; }
+  .related-card .post-meta { margin-top: 0.5rem; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="blog">
+
+  <nav>
+    <div class="nav-left">
+      <span class="nav-logo">dev.blog</span>
+      <div class="nav-links">
+        <a class="active" onclick="showPage('home',this)">home</a>
+        <a onclick="showPage('blog',this)">writing</a>
+        <a onclick="showPage('about',this)">about</a>
+      </div>
+    </div>
+    <div class="toggle" onclick="toggleTheme()" title="Toggle dark mode">
+      <div class="toggle-thumb"></div>
+      <span class="toggle-icon" id="toggle-icon">☽</span>
+    </div>
+  </nav>
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <p class="hero-tag">Software engineer &amp; writer</p>
+      <h1>Thoughts on code,<br>systems &amp; craft.</h1>
+      <p>Long-form writing on backend engineering, developer tools, and the quiet art of building things well.</p>
+    </div>
+
+    <div class="featured" onclick="openPost('abstractions')">
+      <p class="feat-label">Latest post</p>
+      <p class="feat-title">The hidden cost of premature abstractions</p>
+      <p class="feat-desc">We reach for abstraction too early. A look at when DRY becomes the enemy of clarity — and what to write instead.</p>
+      <div class="feat-bottom">
+        <span class="post-meta">Mar 12, 2026 · 8 min read</span>
+        <span class="read-btn">read →</span>
+      </div>
+    </div>
+
+    <p class="section-label">Recent writing</p>
+    <div class="posts-grid">
+      <div class="post-card" onclick="openPost('caching')">
+        <div><p class="post-tag">Systems</p><p class="post-title">Why your caching layer is lying to you</p><p class="post-desc">Cache invalidation isn't the hard part. Knowing when you need it is.</p></div>
+        <p class="post-meta">Feb 28</p>
+      </div>
+      <div class="post-card" onclick="openPost('goroutines')">
+        <div><p class="post-tag">Go</p><p class="post-title">Goroutines are not free — a practical guide</p><p class="post-desc">Concurrency bugs I've shipped, and the mental models that fixed them.</p></div>
+        <p class="post-meta">Feb 14</p>
+      </div>
+      <div class="post-card" onclick="openPost('terminal')">
+        <div><p class="post-tag">Tooling</p><p class="post-title">My terminal setup in 2026</p><p class="post-desc">Neovim, tmux, and a shell prompt that stays out of my way.</p></div>
+        <p class="post-meta">Jan 30</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WRITING -->
+  <div class="page" id="page-blog">
+    <p class="section-label">All writing</p>
+
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input id="search-input" type="text" placeholder="Search posts..." oninput="applyFilters()" autocomplete="off" />
+    </div>
+
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="setTag('all',this)">all</button>
+      <button class="filter-btn" onclick="setTag('Systems',this)">systems</button>
+      <button class="filter-btn" onclick="setTag('Go',this)">go</button>
+      <button class="filter-btn" onclick="setTag('Tooling',this)">tooling</button>
+      <button class="filter-btn" onclick="setTag('Opinion',this)">opinion</button>
+    </div>
+
+    <p class="search-count" id="search-count"></p>
+
+    <div class="posts-grid" id="all-posts">
+      <div class="post-card" data-tag="Opinion" data-title="The hidden cost of premature abstractions" data-desc="We reach for abstraction too early. A look at when DRY becomes the enemy of clarity." onclick="openPost('abstractions')">
+        <div><p class="post-tag">Opinion</p><p class="post-title">The hidden cost of premature abstractions</p><p class="post-desc">We reach for abstraction too early. A look at when DRY becomes the enemy of clarity.</p></div>
+        <p class="post-meta">Mar 12 · 8 min</p>
+      </div>
+      <div class="post-card" data-tag="Systems" data-title="Why your caching layer is lying to you" data-desc="Cache invalidation isn't the hard part. Knowing when you need it is." onclick="openPost('caching')">
+        <div><p class="post-tag">Systems</p><p class="post-title">Why your caching layer is lying to you</p><p class="post-desc">Cache invalidation isn't the hard part. Knowing when you need it is.</p></div>
+        <p class="post-meta">Feb 28 · 6 min</p>
+      </div>
+      <div class="post-card" data-tag="Go" data-title="Goroutines are not free — a practical guide" data-desc="Concurrency bugs I've shipped, and the mental models that fixed them." onclick="openPost('goroutines')">
+        <div><p class="post-tag">Go</p><p class="post-title">Goroutines are not free — a practical guide</p><p class="post-desc">Concurrency bugs I've shipped, and the mental models that fixed them.</p></div>
+        <p class="post-meta">Feb 14 · 11 min</p>
+      </div>
+      <div class="post-card" data-tag="Tooling" data-title="My terminal setup in 2026" data-desc="Neovim, tmux, and a shell prompt that stays out of my way." onclick="openPost('terminal')">
+        <div><p class="post-tag">Tooling</p><p class="post-title">My terminal setup in 2026</p><p class="post-desc">Neovim, tmux, and a shell prompt that stays out of my way.</p></div>
+        <p class="post-meta">Jan 30 · 5 min</p>
+      </div>
+      <div class="post-card" data-tag="Systems" data-title="Designing for failure: lessons from on-call" data-desc="The incidents that taught me more than any book on distributed systems." onclick="openPost('failure')">
+        <div><p class="post-tag">Systems</p><p class="post-title">Designing for failure: lessons from on-call</p><p class="post-desc">The incidents that taught me more than any book on distributed systems.</p></div>
+        <p class="post-meta">Jan 10 · 9 min</p>
+      </div>
+      <div class="post-card" data-tag="Opinion" data-title="Good code is boring code" data-desc="Clever solutions are a liability. Here's what I write instead." onclick="openPost('boring')">
+        <div><p class="post-tag">Opinion</p><p class="post-title">Good code is boring code</p><p class="post-desc">Clever solutions are a liability. Here's what I write instead.</p></div>
+        <p class="post-meta">Dec 18 · 4 min</p>
+      </div>
+    </div>
+    <p class="no-results" id="no-results">No posts found.</p>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="page" id="page-about">
+    <div class="about-grid">
+      <div class="avatar">YN</div>
+      <div>
+        <p class="about-name">Your Name</p>
+        <p class="about-role">Software Engineer · Writer</p>
+      </div>
+    </div>
+    <p class="about-bio">I build backend systems and write about the craft of software — mostly Go, distributed systems, and developer tooling. Previously at [Company], now working on [thing]. I write here to slow down and think clearly.</p>
+    <p class="section-label">things I work with</p>
+    <div class="skills-grid">
+      <span class="skill-chip">Go</span>
+      <span class="skill-chip">Kubernetes</span>
+      <span class="skill-chip">PostgreSQL</span>
+      <span class="skill-chip">Redis</span>
+      <span class="skill-chip">Neovim</span>
+      <span class="skill-chip">Linux</span>
+      <span class="skill-chip">gRPC</span>
+      <span class="skill-chip">Terraform</span>
+    </div>
+    <p class="section-label">find me</p>
+    <div class="social-links">
+      <a href="#">github</a>
+      <a href="#">twitter / x</a>
+      <a href="#">linkedin</a>
+      <a href="#">rss</a>
+    </div>
+  </div>
+
+  <!-- POST DETAIL -->
+  <div class="page" id="page-post">
+    <button class="article-back" id="back-btn" onclick="goBack()">← back</button>
+    <div id="post-content"></div>
+  </div>
+
+</div>
+
+<script>
+  let activeTag = 'all';
+  let prevPage = 'home';
+
+  const posts = {
+    abstractions: {
+      tag: 'Opinion', date: 'Mar 12, 2026', readTime: '8 min read',
+      title: 'The hidden cost of premature abstractions',
+      subtitle: 'We reach for abstraction too early. A look at when DRY becomes the enemy of clarity — and what to write instead.',
+      body: `<p>There's a moment in every codebase where someone, with the best intentions, decides it's time to <em>abstract</em>. Two functions look similar. A third one is on the way. The instinct kicks in: don't repeat yourself. Extract. Generalize. Make it reusable.</p>
+<p>But abstraction isn't free. Every layer of indirection you add is a cost paid by every future reader of that code — including yourself, six months from now, staring at a function called <code>handleEntityOperation</code> and wondering what an "entity" is.</p>
+<h2>The seduction of DRY</h2>
+<p>Don't Repeat Yourself is one of the most widely cited principles in software. It's also one of the most misapplied. DRY was never a mandate to remove all textual duplication. It's about removing <em>conceptual</em> duplication — two pieces of code that represent the same knowledge, that need to change together.</p>
+<blockquote><p>Duplication is far cheaper than the wrong abstraction.</p></blockquote>
+<p>The problem is that we're pattern-matching creatures. We see two loops that look alike and our brain screams <em>merge them</em>. But two things that look the same now may diverge later. When they do, you'll be untangling an abstraction that was never quite right.</p>
+<h2>What premature abstraction looks like</h2>
+<p>Here's a concrete example. Imagine you have two API handlers: one that creates a user, another that creates a product. Both validate an input struct, write to a database, and return a JSON response. Someone notices the pattern and writes a generic <code>createResource</code> function.</p>
+<pre><code>func createResource(ctx context.Context, v Validator, w Writer) error {
+    if err := v.Validate(); err != nil {
+        return err
+    }
+    return w.Write(ctx)
+}</code></pre>
+<p>Six months later, user creation needs an email confirmation step. Product creation needs inventory checks. The generic function starts sprouting boolean flags. Then optional callbacks. Then a config struct. The abstraction has become the problem it was meant to solve.</p>
+<h2>A better heuristic</h2>
+<p>Wait for three. Not two — three concrete, real-world cases before you reach for an abstraction. By the third, the shape of the thing becomes clearer. You'll know which parts genuinely vary and which are truly shared.</p>
+<p>And when you do abstract, name the concept — not the mechanics. <code>sendWelcomeEmail</code> beats <code>dispatchNotification(type: "welcome")</code>. Explicit beats clever. Boring beats surprising.</p>
+<h3>The cost of clarity</h3>
+<p>Sometimes the right answer is repetition. A bit of duplication, clearly named, is often easier to understand, modify, and delete than a tightly coupled abstraction. Code that is easy to delete is underrated.</p>
+<p>Write the duplication. Wait. See if the pattern stabilises. Then — and only then — reach for the abstraction.</p>`,
+      related: ['caching', 'boring']
+    },
+    caching: {
+      tag: 'Systems', date: 'Feb 28, 2026', readTime: '6 min read',
+      title: 'Why your caching layer is lying to you',
+      subtitle: "Cache invalidation isn't the hard part. Knowing when you need it is.",
+      body: `<p>Everyone says cache invalidation is one of the hardest problems in computer science. But in my experience, the harder problem is knowing when to cache at all — and understanding what guarantees you're actually making when you do.</p>
+<p>A cache is a promise: "this data was accurate at some point in the past." The moment you add one, you've introduced a gap between what your system believes and what's true. That gap has a name: <em>staleness</em>. And staleness has consequences you might not have thought through.</p>
+<h2>What caches actually give you</h2>
+<p>Speed, mostly. Caches trade consistency for latency. In the right situations — data that changes infrequently, reads that vastly outnumber writes, users who can tolerate slightly stale state — that's an excellent trade. In the wrong situations, it's a bug that surfaces at the worst possible time.</p>
+<pre><code>// This looks safe. It isn't.
+func getUser(id string) (*User, error) {
+    if u := cache.Get(id); u != nil {
+        return u, nil
+    }
+    u, err := db.FetchUser(id)
+    if err != nil { return nil, err }
+    cache.Set(id, u, 5*time.Minute)
+    return u, nil
+}</code></pre>
+<h2>The invalidation trap</h2>
+<p>Most teams reach for TTL-based expiry as their invalidation strategy. It's simple and it works — until you need freshness guarantees shorter than your TTL, or until a write happens at second 0 and the cache serves stale data for the next 299 seconds.</p>
+<blockquote><p>Every caching strategy is a bet. Know what you're betting on.</p></blockquote>
+<h2>Before you cache</h2>
+<p>Ask three questions. First: do I actually have a latency problem, or do I have a slow query I haven't optimised yet? Second: can the user tolerate stale data, and for how long? Third: what's the blast radius if the cache gets poisoned with bad data?</p>
+<p>If you can't answer all three, you're not ready to cache. Profile first. Index first. Denormalise first. Cache last.</p>`,
+      related: ['goroutines', 'failure']
+    },
+    goroutines: {
+      tag: 'Go', date: 'Feb 14, 2026', readTime: '11 min read',
+      title: 'Goroutines are not free — a practical guide',
+      subtitle: "Concurrency bugs I've shipped, and the mental models that fixed them.",
+      body: `<p>Go makes concurrency easy to write. That's both its superpower and its trap. Spawning a goroutine takes a single keyword. Cleaning one up properly takes careful thought.</p>
+<h2>Goroutines are cheap, not free</h2>
+<p>A goroutine starts with roughly 2–8KB of stack space, growing as needed. Millions of them are feasible. But "feasible" and "correct" are different things. A goroutine that leaks — that's running but no longer useful — is consuming memory, potentially holding locks, and writing to channels nobody reads.</p>
+<pre><code>// Classic leak: goroutine blocks forever if nobody reads result
+func fetch(url string) {
+    ch := make(chan string)
+    go func() {
+        resp, _ := http.Get(url)
+        ch &lt;- resp.Status // blocks if caller already returned
+    }()
+}</code></pre>
+<h2>The rules I follow</h2>
+<p>First: never start a goroutine without knowing how it ends. Before you write <code>go func()</code>, ask yourself: what makes this goroutine exit? A channel close? A context cancellation? If you can't answer immediately, you have a leak waiting to happen.</p>
+<p>Second: use <code>context.Context</code> for cancellation, always. Pass it as the first argument to any function that might block.</p>
+<pre><code>func fetchWithContext(ctx context.Context, url string) (string, error) {
+    req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+    if err != nil { return "", err }
+    resp, err := http.DefaultClient.Do(req)
+    if err != nil { return "", err }
+    defer resp.Body.Close()
+    return resp.Status, nil
+}</code></pre>
+<h2>On races</h2>
+<p>Run your tests with <code>-race</code>. Always. The race detector has caught more bugs for me than any code review.</p>
+<blockquote><p>A data race is undefined behaviour in Go. Not "probably fine." Undefined.</p></blockquote>
+<p>Concurrency isn't hard because goroutines are complicated. It's hard because the failure modes are non-local, non-deterministic, and often invisible until they aren't.</p>`,
+      related: ['caching', 'terminal']
+    },
+    terminal: {
+      tag: 'Tooling', date: 'Jan 30, 2026', readTime: '5 min read',
+      title: 'My terminal setup in 2026',
+      subtitle: 'Neovim, tmux, and a shell prompt that stays out of my way.',
+      body: `<p>I spend most of my working day in a terminal. After years of tweaking, I've landed on a setup that feels invisible — it does what I need without demanding attention.</p>
+<h2>The shell: fish</h2>
+<p>I switched from zsh to fish two years ago and haven't looked back. Autosuggestions work out of the box. Syntax highlighting is built in. The scripting syntax is sensible.</p>
+<h2>Neovim</h2>
+<p>I use Neovim with a small, hand-maintained config. No large plugin distributions. The plugins I actually use:</p>
+<ul>
+  <li><code>nvim-lspconfig</code> — language server protocol</li>
+  <li><code>nvim-cmp</code> — completion</li>
+  <li><code>telescope.nvim</code> — fuzzy finding, grep, file navigation</li>
+  <li><code>oil.nvim</code> — file explorer as a buffer</li>
+</ul>
+<p>The key insight: a small config you understand beats a large one you don't. I can read every line of my <code>init.lua</code>. That matters when something breaks.</p>
+<h2>tmux</h2>
+<p>I use tmux for session management — one session per project, windows for different concerns. The prefix key is remapped to <code>Ctrl-a</code>.</p>
+<pre><code># .tmux.conf essentials
+set -g prefix C-a
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+set -g mouse on</code></pre>
+<h2>The prompt: starship</h2>
+<p>Starship gives me git status, current directory, and language version when relevant — and nothing else. It's fast enough that I never notice it.</p>
+<p>The best terminal setup is the one that disappears. Every piece of mine earns its place by making me faster or less error-prone.</p>`,
+      related: ['abstractions', 'boring']
+    },
+    failure: {
+      tag: 'Systems', date: 'Jan 10, 2026', readTime: '9 min read',
+      title: 'Designing for failure: lessons from on-call',
+      subtitle: 'The incidents that taught me more than any book on distributed systems.',
+      body: `<p>I've been on-call on and off for six years. The incidents I remember most weren't the dramatic ones. They were the subtle ones — the ones that taught me something about how distributed systems actually fail.</p>
+<h2>Failure is the default</h2>
+<p>In a distributed system, failure isn't an edge case. It's the steady state, suppressed by redundancy. Networks partition. Disks fill. Services time out. The question isn't whether your system will fail — it's whether it will fail in a way you designed for.</p>
+<blockquote><p>Hope is not a strategy. Neither is "it works in staging."</p></blockquote>
+<h2>The incident that changed how I think</h2>
+<p>The one that stuck with me most was a cascading timeout. One upstream dependency started responding slowly. Our service had no timeout configured — it just waited. Goroutines piled up. Memory climbed. The service became slow, which made it an upstream problem for something else. Three services fell over because one was slow.</p>
+<p>The fix was embarrassingly simple: set timeouts. But the lesson was deeper — every external call is a liability. Treat it like one.</p>
+<h2>What I do differently now</h2>
+<p>Timeouts on everything. Circuit breakers for external dependencies. Readiness probes that actually test dependencies, not just process liveness. Structured logs with enough context to reconstruct what happened without a debugger.</p>
+<p>And runbooks. Not because I'll remember what to do in an incident — I won't — but because writing the runbook forces me to think through the failure modes before they happen.</p>
+<h2>On alerts</h2>
+<p>Page on symptoms, not causes. An alert that fires when error rate exceeds 1% is useful. An alert that fires when CPU exceeds 70% is usually noise. If an alert doesn't have a clear action, it shouldn't be an alert — it should be a dashboard.</p>`,
+      related: ['caching', 'abstractions']
+    },
+    boring: {
+      tag: 'Opinion', date: 'Dec 18, 2025', readTime: '4 min read',
+      title: 'Good code is boring code',
+      subtitle: "Clever solutions are a liability. Here's what I write instead.",
+      body: `<p>The most impressive code I've ever read was boring. Flat. Predictable. Functions that did one thing, named after what they did. No tricks. No cleverness. Easy to follow from top to bottom.</p>
+<p>The least impressive code I've ever read was clever. It was elegant. It demonstrated mastery. And it took me an afternoon to understand well enough to change safely.</p>
+<h2>What "clever" actually costs</h2>
+<p>Clever code optimises for the moment of writing. Boring code optimises for every moment after. Given that code is read far more than it's written, the math seems obvious — and yet we reach for the clever solution anyway.</p>
+<blockquote><p>Debugging is twice as hard as writing code. If you write code as clever as you can, you are, by definition, not smart enough to debug it.</p></blockquote>
+<h2>What I reach for instead</h2>
+<p>Long variable names. <code>userPermissionsForCurrentRequest</code> is better than <code>perms</code>. It takes longer to type once; it saves comprehension time every future read.</p>
+<p>Flat functions with guard clauses:</p>
+<pre><code>// Guard clauses — easy to scan
+func process(u *User) error {
+    if u == nil || !u.Active { return nil }
+    if !u.HasPermission("write") { return nil }
+    return doWork(u)
+}</code></pre>
+<p>Comments that explain <em>why</em>, not <em>what</em>. The code already says what. If it doesn't, rename things until it does.</p>
+<h2>The boring test</h2>
+<p>Before committing, I ask: could a competent engineer unfamiliar with this codebase understand this in five minutes? If not, simplify. The goal isn't to look smart. The goal is to make the next person — often future-me — faster.</p>`,
+      related: ['abstractions', 'terminal']
+    }
+  };
+
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    if (el) el.classList.add('active');
+    updateProgress();
+  }
+
+  function setTag(tag, btn) {
+    activeTag = tag;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilters();
+  }
+
+  function highlight(text, query) {
+    if (!query) return text;
+    const esc = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return text.replace(new RegExp(esc, 'gi'), m => '<mark>' + m + '</mark>');
+  }
+
+  function applyFilters() {
+    const query = document.getElementById('search-input').value.trim().toLowerCase();
+    const cards = document.querySelectorAll('#all-posts .post-card');
+    let visible = 0;
+    cards.forEach(card => {
+      const tagMatch = activeTag === 'all' || card.dataset.tag === activeTag;
+      const qMatch = !query ||
+        card.dataset.title.toLowerCase().includes(query) ||
+        card.dataset.desc.toLowerCase().includes(query) ||
+        card.dataset.tag.toLowerCase().includes(query);
+      if (tagMatch && qMatch) {
+        card.style.display = 'grid';
+        card.querySelector('.post-title').innerHTML = highlight(card.dataset.title, query);
+        card.querySelector('.post-desc').innerHTML  = highlight(card.dataset.desc, query);
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    const q = document.getElementById('search-input').value.trim();
+    document.getElementById('search-count').textContent =
+      q ? visible + ' result' + (visible !== 1 ? 's' : '') + ' for "' + q + '"' : '';
+    document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  function openPost(slug) {
+    const post = posts[slug];
+    if (!post) return;
+    const activePage = document.querySelector('.page.active');
+    prevPage = activePage ? activePage.id.replace('page-', '') : 'home';
+
+    const relatedHTML = post.related.map(r => {
+      const rp = posts[r];
+      return `<div class="related-card" onclick="openPost('${r}')">
+        <p class="post-tag">${rp.tag}</p>
+        <p class="post-title">${rp.title}</p>
+        <p class="post-meta">${rp.date}</p>
+      </div>`;
+    }).join('');
+
+    document.getElementById('post-content').innerHTML = `
+      <div class="article-header">
+        <p class="post-tag">${post.tag}</p>
+        <h1 class="article-title">${post.title}</h1>
+        <p class="article-subtitle">${post.subtitle}</p>
+        <div class="article-meta-row">
+          <div class="article-avatar">YN</div>
+          <div class="article-byline">
+            <span class="article-byline-name">Your Name</span>
+            <span class="article-byline-date">${post.date}</span>
+          </div>
+          <span class="article-read-time">${post.readTime}</span>
+        </div>
+      </div>
+      <div class="article-body">${post.body}</div>
+      <div class="article-footer">
+        <p class="section-label">More reading</p>
+        <div class="related-grid">${relatedHTML}</div>
+      </div>
+    `;
+    showPage('post', null);
+    window.scrollTo(0, 0);
+  }
+
+  function goBack() {
+    const navLink = document.querySelector(`.nav-links a[onclick*="'${prevPage}'"]`);
+    showPage(prevPage, navLink);
+    window.scrollTo(0, 0);
+  }
+
+  function updateProgress() {
+    const bar = document.getElementById('progress-bar');
+    const postPage = document.getElementById('page-post');
+    if (!postPage.classList.contains('active')) { bar.style.width = '0%'; return; }
+    const total = document.body.scrollHeight - window.innerHeight;
+    bar.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + '%';
+  }
+  window.addEventListener('scroll', updateProgress);
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('toggle-icon').textContent = isDark ? '☽' : '☀';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  }
+
+  (function() {
+    const saved = localStorage.getItem('theme');
+    if (saved) {
+      document.documentElement.setAttribute('data-theme', saved);
+      document.getElementById('toggle-icon').textContent = saved === 'dark' ? '☀' : '☽';
+    }
+  })();
+</script>
+</body>
+</html>
