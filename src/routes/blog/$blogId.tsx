@@ -5,6 +5,8 @@ import { ArrowUp, User } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import Markdown from 'react-markdown'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeHighlight from 'rehype-highlight'
+import rehypeSanitize from 'rehype-sanitize'
 import rehypeSlug from 'rehype-slug'
 import remarkBreaks from 'remark-breaks'
 import remarkFlexibleToc from 'remark-flexible-toc'
@@ -191,6 +193,8 @@ function RouteComponent() {
               remarkPlugins={[remarkGfm, remarkBreaks]}
               rehypePlugins={[
                 rehypeSlug,
+                rehypeSanitize,
+                [rehypeHighlight, { detect: true }],
                 [
                   rehypeAutolinkHeadings,
                   {
