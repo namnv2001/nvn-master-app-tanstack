@@ -11,7 +11,7 @@ export const BlogCard = ({ article }: { article: Article }) => {
     <Link
       to="/blog/$blogId"
       params={{ blogId: article.slug }}
-      className="grid cursor-pointer grid-cols-[minmax(0,1fr)_auto] items-start gap-4 border-b border-border/60 py-5 last:border-b-0 hover:text-muted transition-colors"
+      className="grid cursor-pointer grid-cols-[minmax(0,1fr)_auto] items-start gap-4 border-b border-border/60 py-5 last:border-b-0 hover:text-accent transition-colors"
     >
       <div>
         {article.tags.length > 0 && (
@@ -20,7 +20,7 @@ export const BlogCard = ({ article }: { article: Article }) => {
           </p>
         )}
         <div className="flex items-center gap-2 mb-1">
-          {isRead ? <CheckCircleIcon className="w-4 h-4 text-muted" /> : null}
+          {isRead ? <CheckCircleIcon className="w-4 h-4 text-accent" /> : null}
           <p
             className="text-[15px] font-medium leading-snug"
             dangerouslySetInnerHTML={{ __html: article.title }}
