@@ -132,7 +132,7 @@ function RouteComponent() {
 
           {/* Summary */}
           {blog.summary && (
-            <p className="mb-6 max-w-[580px] text-[16px] leading-relaxed text-muted">
+            <p className="mb-6 text-[16px] leading-relaxed text-muted">
               {blog.summary}
             </p>
           )}

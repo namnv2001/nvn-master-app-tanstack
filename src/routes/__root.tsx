@@ -6,7 +6,7 @@ import {
   useLocation,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
@@ -16,8 +16,8 @@ import type { QueryClient } from '@tanstack/react-query'
 import { Footer } from '@/components/Footer'
 import Loading from '@/components/Loading'
 import NavBar from '@/components/NavBar'
-import { getTheme, isClient } from '@/helpers'
 import { Theme } from '@/constants'
+import { getTheme, isClient } from '@/helpers'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -35,13 +35,18 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'Vawnnam Dev',
+        title: 'vawnnam.blog',
       },
     ],
     links: [
       {
         rel: 'stylesheet',
         href: appCss,
+      },
+      {
+        rel: 'icon',
+        type: 'image/svg+xml',
+        href: '/static/images/favicon.svg',
       },
     ],
   }),
