@@ -1,6 +1,6 @@
 @import 'tailwindcss';
-
 @import 'tw-animate-css';
+@import 'highlight.js/styles/atom-one-light.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -31,7 +31,7 @@ body {
   --primary: #1A1917;
   --muted: #7A7772;
   --border: rgba(26, 25, 23, 0.10);
-  --accent: #1A1917;
+  --accent: #0ABAB5;
 
   --font-sans: 'Be Vietnam Pro', sans-serif;
   --font-serif: 'Lora', serif;
@@ -53,7 +53,7 @@ body {
   --primary: #EDECEA;
   --muted: #6B6965;
   --border: rgba(237, 236, 234, 0.10);
-  --accent: #EDECEA;
+  --accent: #0F828C;
 }
 
 @theme inline {
@@ -131,7 +131,7 @@ body {
     @apply border-l-2 border-accent pl-6 my-6 text-muted bg-secondary-background py-4 rounded-r-lg;
 
     p {
-      @apply font-serif text-lg text-muted my-0;
+      @apply font-sans text-base text-muted my-0;
     }
   }
 
