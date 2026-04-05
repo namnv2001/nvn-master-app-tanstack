@@ -6,16 +6,28 @@ import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
 import { cloudflare } from '@cloudflare/vite-plugin'
 
+const staticPagesBuild = process.env.STATIC_PAGES_BUILD === 'true'
+
 const config = defineConfig({
+  base: process.env.VITE_BASE_PATH ?? '/',
   plugins: [
     devtools(),
-    cloudflare({ viteEnvironment: { name: 'ssr' } }),
+    ...(staticPagesBuild
+      ? []
+      : [cloudflare({ viteEnvironment: { name: 'ssr' } })]),
     // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
     tailwindcss(),
-    tanstackStart(),
+    tanstackStart({
+      prerender: {
+        enabled: true,
+        autoStaticPathsDiscovery: true,
+        crawlLinks: true,
+        autoSubfolderIndex: true,
+      },
+    }),
     viteReact(),
   ],
 })
