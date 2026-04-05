@@ -44,7 +44,7 @@ function App() {
         <Link
           to="/blog/$blogId"
           params={{ blogId: featured.slug }}
-          className="mb-10 block cursor-pointer rounded-xl border border-border/60 bg-secondary-background p-6 transition-colors hover:bg-toggle-background"
+          className="mb-10 block cursor-pointer rounded-xl border border-border/60 bg-secondary-background p-6 hover:bg-toggle-background"
         >
           <p className="mb-3 font-mono text-[11px] uppercase tracking-widest text-muted">
             Latest post

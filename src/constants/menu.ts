@@ -9,8 +9,3 @@ export const SOCIAL_LINKS = [
   { label: 'GitHub', to: 'https://github.com/namnv2001' },
   { label: 'LinkedIn', to: 'https://linkedin.com/in/namnv2001' },
 ]
-
-export enum Theme {
-  DARK = 'dark',
-  LIGHT = 'light',
-}
