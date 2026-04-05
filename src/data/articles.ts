@@ -74,33 +74,3 @@ export const getArticleBySlug = createServerFn({ method: 'GET' })
     }
     return Promise.resolve(buildMarkdownContent(rawContent, data))
   })
-
-export const getTags = createServerFn({ method: 'GET' }).handler(
-  async (): Promise<Array<string>> => {
-    const { blogs, gears } = await getAllArticles()
-    return Array.from(
-      new Set(
-        [
-          ...blogs.map((blog) => blog.tags),
-          ...gears.map((gear) => gear.tags),
-        ].flat(),
-      ),
-    )
-  },
-)
-
-export const getArticlesByTag = createServerFn({ method: 'GET' })
-  .inputValidator(z.string().min(1))
-  .handler(async ({ data }): Promise<Array<Article>> => {
-    const { blogs, gears } = await getAllArticles()
-    return [...blogs, ...gears].filter((article) =>
-      article.tags.some((tag) => tag.toLowerCase() === data.toLowerCase()),
-    )
-  })
-
-export const searchTag = createServerFn({ method: 'GET' })
-  .inputValidator(z.string().min(1))
-  .handler(async ({ data }): Promise<Array<string>> => {
-    const tags = await getTags()
-    return tags.filter((tag) => tag.toLowerCase().includes(data.toLowerCase()))
-  })

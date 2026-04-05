@@ -112,20 +112,6 @@ export const getReadBlogs = (): Record<string, number> => {
   }
 }
 
-export const groupArticlesByYear = (
-  blogs: Array<Article>,
-): Record<string, Array<Article>> => {
-  return blogs.reduce(
-    (acc, blog) => {
-      const year = new Date(blog.date).getFullYear()
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      acc[year] = [...(acc[year] || []), blog]
-      return acc
-    },
-    {} as Record<string, Array<Article>>,
-  )
-}
-
 export const debounce = (
   func: (...args: Array<any>) => void,
   wait: number = 300,
@@ -138,27 +124,4 @@ export const debounce = (
       func(...args)
     }, wait)
   }
-}
-
-export const groupTopicsByAlphabet = (
-  topics: Array<string>,
-): Record<string, Array<string>> => {
-  return topics.reduce(
-    (acc, topic) => {
-      const firstLetter = topic.charAt(0).toUpperCase()
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      acc[firstLetter] = [...(acc[firstLetter] || []), topic]
-      return acc
-    },
-    {} as Record<string, Array<string>>,
-  )
-}
-
-export const getArticlesByTag = (
-  tag: string,
-  articles: Array<Article>,
-): Array<Article> => {
-  return articles.filter((article) =>
-    article.tags.some((t) => t.toLowerCase() === tag.toLowerCase()),
-  )
 }

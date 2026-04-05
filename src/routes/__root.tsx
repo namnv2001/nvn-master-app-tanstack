@@ -16,8 +16,9 @@ import type { QueryClient } from '@tanstack/react-query'
 import { Footer } from '@/components/Footer'
 import Loading from '@/components/Loading'
 import NavBar from '@/components/NavBar'
-import { Theme } from '@/constants'
+import { MOBILE_WIDTH, Theme } from '@/constants'
 import { getTheme, isClient } from '@/helpers'
+import { useGlobalStore } from '@/store'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -61,13 +62,23 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const { isClient: _isClient } = Route.useRouteContext()
   const location = useLocation()
   const [theme, setTheme] = useState<string | Theme>(Theme.DARK)
-  const [loading, setLoading] = useState(true)
+  const { loading, setLoading, setIsMobile } = useGlobalStore()
 
   useEffect(() => {
     if (!_isClient) return
     setTheme(getTheme())
     setLoading(false)
   }, [_isClient, theme])
+
+  useEffect(() => {
+    if (!_isClient) return
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= MOBILE_WIDTH)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [_isClient])
 
   return (
     <html lang="en">
@@ -88,7 +99,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         {loading ? (
           <Loading />
         ) : (
-          <div className="mx-auto p-4 max-w-3xl">
+          <div className="mx-auto p-4 pt-0 max-w-3xl">
             <NavBar setTheme={setTheme} />
             <main className="mt-10">{children}</main>
             <Footer />

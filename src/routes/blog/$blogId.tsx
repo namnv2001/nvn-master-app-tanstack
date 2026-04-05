@@ -283,7 +283,7 @@ function RouteComponent() {
           onClick={() => {
             if (isClient) window.scrollTo({ top: 0, behavior: 'smooth' })
           }}
-          className="fixed bottom-18 right-4 z-40 inline-flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-primary/20 text-background shadow-lg hover:bg-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background bg-se"
+          className="fixed bottom-18 right-4 inline-flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-primary/20 text-background shadow-lg hover:bg-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background bg-se"
           aria-label="Back to top"
         >
           <ArrowUp size={20} />
