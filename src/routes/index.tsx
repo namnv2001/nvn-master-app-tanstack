@@ -30,7 +30,7 @@ function App() {
           <br />
           systems &amp; life.
         </h1>
-        <p className="max-w-[520px] text-[15px] leading-[1.7] text-muted font-light">
+        <p className="text-[15px] leading-[1.7] text-muted font-light">
           Software engineering, developer tools, and the art of building things
           with love.
           <br />

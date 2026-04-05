@@ -57,10 +57,10 @@ export const getTheme = () => {
 
   try {
     const theme = localStorage.getItem(THEME_KEY)
-    return theme || Theme.LIGHT
+    return theme || Theme.DARK
   } catch (error) {
     console.error('Failed to get theme:', error)
-    return Theme.LIGHT
+    return Theme.DARK
   }
 }
 

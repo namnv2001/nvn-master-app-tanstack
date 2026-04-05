@@ -1,0 +1,157 @@
+name: Release branch and GitHub Pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Semver bump when computing next version (ignored if version_override is set)'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: patch
+      version_override:
+        description: 'Optional exact semver X.Y.Z; leave empty to auto-bump from releases/* branches'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  release_and_build:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch remote branches
+        run: git fetch origin
+
+      - name: Compute release version
+        id: ver
+        env:
+          BUMP: ${{ inputs.bump }}
+          VERSION_OVERRIDE: ${{ inputs.version_override }}
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const { execSync } = require('child_process');
+          const bump = process.env.BUMP || 'patch';
+          const override = (process.env.VERSION_OVERRIDE || '').trim();
+          function parseSemver(s) {
+            const m = String(s).match(/^(\d+)\.(\d+)\.(\d+)$/);
+            if (!m) return null;
+            return [parseInt(m[1], 10), parseInt(m[2], 10), parseInt(m[3], 10)];
+          }
+          function cmp(a, b) {
+            for (let i = 0; i < 3; i++) {
+              if (a[i] !== b[i]) return a[i] - b[i];
+            }
+            return 0;
+          }
+          function bumpVer(v, type) {
+            const [x, y, z] = v;
+            if (type === 'major') return [x + 1, 0, 0];
+            if (type === 'minor') return [x, y + 1, 0];
+            return [x, y, z + 1];
+          }
+          const out = process.env.GITHUB_OUTPUT;
+          if (override) {
+            if (!parseSemver(override)) {
+              console.error('Invalid version_override; expected X.Y.Z');
+              process.exit(1);
+            }
+            fs.appendFileSync(out, `version=${override}\n`);
+            process.exit(0);
+          }
+          let remote = '';
+          try {
+            remote = execSync('git ls-remote --heads origin "refs/heads/releases/*"', {
+              encoding: 'utf8',
+            });
+          } catch (_) {
+            remote = '';
+          }
+          const versions = [];
+          for (const line of remote.split('\n')) {
+            const t = line.trim();
+            if (!t) continue;
+            const parts = t.split(/\s+/);
+            const ref = parts.length >= 2 ? parts[1] : parts[0];
+            if (!ref || !ref.startsWith('refs/heads/releases/')) continue;
+            const name = ref.slice('refs/heads/releases/'.length);
+            const v = parseSemver(name);
+            if (v) versions.push(v);
+          }
+          let base;
+          if (versions.length) {
+            base = versions.reduce((a, b) => (cmp(a, b) >= 0 ? a : b));
+          } else {
+            let pkg = {};
+            try {
+              pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            } catch (_) {}
+            base = parseSemver(pkg.version) || [0, 0, 0];
+          }
+          const next = bumpVer(base, bump).join('.');
+          fs.appendFileSync(out, `version=${next}\n`);
+          console.log('Next version:', next);
+          NODE
+
+      - name: Ensure release branch does not already exist
+        run: |
+          if git ls-remote --heads origin "refs/heads/releases/${{ steps.ver.outputs.version }}" | grep -q .
+          then
+            echo "Branch releases/${{ steps.ver.outputs.version }} already exists on origin."
+            exit 1
+          fi
+
+      - name: Create and push release branch
+        run: |
+          git checkout -b "releases/${{ steps.ver.outputs.version }}"
+          git push origin "releases/${{ steps.ver.outputs.version }}"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install and build
+        env:
+          STATIC_PAGES_BUILD: 'true'
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+        run: |
+          npm ci
+          npm run build
+
+      - name: GitHub Pages SPA fallback
+        run: cp dist/client/index.html dist/client/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/client
+
+  deploy:
+    needs: release_and_build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
