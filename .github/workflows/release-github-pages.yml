@@ -1,6 +1,3 @@
-# One-time: Settings → Pages → Build: GitHub Actions.
-# One-time: Settings → Actions → General → Workflow permissions: Read and write (for pushing releases/*).
-
 name: Release branch and GitHub Pages
 
 on:

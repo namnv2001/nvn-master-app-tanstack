@@ -2,6 +2,7 @@
   "name": "nvn-blog-tanstack",
   "private": true,
   "type": "module",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "vite build",
