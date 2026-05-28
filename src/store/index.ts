@@ -10,6 +10,6 @@ type Store = {
 export const useGlobalStore = create<Store>((set) => ({
   isMobile: false,
   setIsMobile: (isMobile: boolean) => set({ isMobile }),
-  loading: true,
+  loading: false,
   setLoading: (loading: boolean) => set({ loading }),
 }))

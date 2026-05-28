@@ -10,7 +10,6 @@ import { debounce } from '@/helpers'
 import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/blog/')({
-  ssr: 'data-only',
   component: BlogList,
   loader: async () => await getAllArticles(),
   validateSearch: z.object({

@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
 import { List, ListXIcon } from 'lucide-react'
 import React, { useState } from 'react'
 
@@ -47,6 +47,7 @@ const NavBar = ({ setTheme }: NavBarProps) => {
 const NavItems: React.FC = () => {
   const { isMobile } = useGlobalStore()
   const [isOpen, setIsOpen] = useState(false)
+  const location = useLocation()
 
   const handleToggleMenu = () => setIsOpen((prev) => !prev)
 

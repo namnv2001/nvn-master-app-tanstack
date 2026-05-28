@@ -14,7 +14,6 @@ import appCss from '../styles.css?url'
 import type { QueryClient } from '@tanstack/react-query'
 
 import { Footer } from '@/components/Footer'
-import Loading from '@/components/Loading'
 import NavBar from '@/components/NavBar'
 import { MOBILE_WIDTH, Theme } from '@/constants'
 import { getTheme, isClient } from '@/helpers'
@@ -24,6 +23,18 @@ interface MyRouterContext {
   queryClient: QueryClient
   isClient: boolean
 }
+
+/**
+ * Runs synchronously as the very first thing in <body> — before any content
+ * element is painted — so the correct theme class is on <html> before the
+ * browser renders a single pixel of page content.
+ *
+ * It must be an immediately-invoked function so it cannot be deferred or
+ * reordered by the browser.  We set `document.documentElement.className`
+ * (the <html> element) rather than <body> so the CSS variables in
+ * `:root.dark` / `.dark` cascade to every child element.
+ */
+const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('theme')||'dark';document.documentElement.className=t}catch(e){document.documentElement.className='dark'}})();`
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   head: () => ({
@@ -62,13 +73,22 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const { isClient: _isClient } = Route.useRouteContext()
   const location = useLocation()
   const [theme, setTheme] = useState<string | Theme>(Theme.DARK)
-  const { loading, setLoading, setIsMobile } = useGlobalStore()
+  const { setIsMobile } = useGlobalStore()
 
+  // On mount, sync state with whatever the inline script already applied.
   useEffect(() => {
-    if (!_isClient) return
     setTheme(getTheme())
-    setLoading(false)
-  }, [_isClient, theme])
+  }, [])
+
+  // Keep <html> class in sync whenever the theme state changes (e.g. toggle).
+  // We manage the class directly on documentElement rather than via a React
+  // className prop so that it never conflicts with React's reconciler.
+  useEffect(() => {
+    if (theme) {
+      document.documentElement.classList.remove(Theme.DARK, Theme.LIGHT)
+      document.documentElement.classList.add(theme)
+    }
+  }, [theme])
 
   useEffect(() => {
     if (!_isClient) return
@@ -81,7 +101,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   }, [_isClient])
 
   return (
-    <html lang="en">
+    // suppressHydrationWarning: the inline script sets a class on <html> before
+    // React hydrates, so the SSR attribute and the live DOM will differ.
+    // suppressHydrationWarning tells React to accept the DOM as-is rather than
+    // warn or attempt to "correct" an attribute it doesn't own.
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -95,16 +119,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           rel="stylesheet"
         />
       </head>
-      <body className={`bg-background ${theme}`}>
-        {loading ? (
-          <Loading />
-        ) : (
-          <div className="mx-auto p-4 pt-0 max-w-3xl">
-            <NavBar setTheme={setTheme} />
-            <main className="mt-10">{children}</main>
-            <Footer />
-          </div>
-        )}
+      <body className="bg-background">
+        {/*
+          This script tag is intentionally the very first child of <body>.
+          The browser parses HTML top-to-bottom; because this script appears
+          before any content element, it executes (and sets the theme class)
+          before the browser lays out or paints a single content node.
+          Result: zero visible theme flash, even on a cold cache.
+        */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <div className="mx-auto p-4 pt-0 max-w-3xl">
+          <NavBar setTheme={setTheme} />
+          <main className="mt-10">{children}</main>
+          <Footer />
+        </div>
         <TanStackDevtools
           config={{
             position: 'bottom-left',

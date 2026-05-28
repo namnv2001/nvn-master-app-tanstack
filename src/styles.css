@@ -46,6 +46,8 @@ body {
     Border             : rgba(237,236,234,0.10) — subtle dividers
     Accent             : #EDECEA  — nav active, buttons, links
 */
+/* Theme class lives on <html> — variables inherit to all children. */
+:root.dark,
 .dark {
   --background: #111110;
   --secondary-background: #1C1C1A;
