@@ -22,7 +22,7 @@ export const BlogCard = ({ article }: { article: Article }) => {
         <div className="flex items-center gap-2 mb-1">
           {isRead ? <CheckCircleIcon className="w-4 h-4 text-accent" /> : null}
           <p
-            className="text-[15px] font-medium leading-snug"
+            className="text-[15px] font-medium leading-snug capitalize"
             dangerouslySetInnerHTML={{ __html: article.title }}
           />
         </div>
