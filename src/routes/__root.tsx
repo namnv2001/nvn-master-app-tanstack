@@ -1,14 +1,10 @@
-import { TanStackDevtools } from '@tanstack/react-devtools'
 import {
   HeadContent,
   Scripts,
   createRootRouteWithContext,
-  useLocation,
 } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { useEffect, useState } from 'react'
 
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
@@ -71,7 +67,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   const { isClient: _isClient } = Route.useRouteContext()
-  const location = useLocation()
   const [theme, setTheme] = useState<string | Theme>(Theme.DARK)
   const { setIsMobile } = useGlobalStore()
 
@@ -133,19 +128,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <main className="mt-10">{children}</main>
           <Footer />
         </div>
-        <TanStackDevtools
-          config={{
-            position: 'bottom-left',
-            triggerHidden: !_isClient || !location.url.includes('localhost'),
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-            TanStackQueryDevtools,
-          ]}
-        />
         <Scripts />
       </body>
     </html>

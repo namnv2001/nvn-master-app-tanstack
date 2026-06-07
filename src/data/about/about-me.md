@@ -44,7 +44,3 @@ _Updated February 21, 2026_
   - Storage: 256GB + 1GB NVMe SSD
   - CPU Cooler: [DEEPCOOL AK400 DIGITAL](https://www.techpowerup.com/review/deepcool-ak400-cpu-cooler/6.html)
   - Screen: [LG 27QN600-B 27" QHD IPS Monitor](https://www.lg.com/vn/man-hinh-may-tinh/man-hinh-do-hoa-ultrafine/27qn600-b/)
-
-## Resume
-
-[Add Resume Here Later](https://drive.google.com/file/d/1Xo9n8s5l7Z8v9a2b3c4d5e6f7g8h9i0/view?usp=sharing)
