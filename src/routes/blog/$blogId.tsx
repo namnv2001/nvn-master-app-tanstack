@@ -187,9 +187,16 @@ function RouteComponent() {
       <div className="grid grid-cols-1 items-start gap-4">
         <article className="col-span-1 xl:col-span-3">
           {/* Content */}
-          <div className="article-content prose max-w-none pb-6 text-[16px] leading-relaxed dark:prose-invert">
+          <div className="article-content prose pb-6 text-[16px] leading-relaxed dark:prose-invert">
             <Markdown
               children={blog.content || ''}
+              components={{
+                table: ({ children }) => (
+                  <div className="table-wrapper">
+                    <table>{children}</table>
+                  </div>
+                ),
+              }}
               remarkPlugins={[remarkGfm, remarkBreaks]}
               rehypePlugins={[
                 rehypeSlug,
