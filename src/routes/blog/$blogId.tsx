@@ -264,7 +264,7 @@ function RouteComponent() {
             <Giscus
               id="comments"
               repo="namnv2001/nvn-master-app-tanstack"
-              repoId="R_kgDOQY5PMw="
+              repoId="R_kgDOQY5PMw"
               category="Announcements"
               categoryId="DIC_kwDOQY5PM84C3iWz"
               mapping="pathname"
