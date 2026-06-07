@@ -170,8 +170,12 @@ body {
     @apply my-8 border-border;
   }
 
+  .table-wrapper {
+    @apply overflow-x-auto my-6;
+  }
+
   table {
-    @apply w-full border-collapse border border-border rounded-lg overflow-x-auto my-6;
+    @apply w-full border-collapse border border-border rounded-lg;
   }
 
   thead {
