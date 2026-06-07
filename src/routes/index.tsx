@@ -16,7 +16,7 @@ function App() {
   const [featured, recent] = useMemo(() => {
     if (blogs.length === 0) return [null, []] as const
     const [first, ...rest] = blogs
-    return [first, rest.slice(0, 3)] as const
+    return [first, rest.slice(0, 5)] as const
   }, [blogs])
 
   return (

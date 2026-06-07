@@ -1,0 +1,3 @@
+#!/bin/sh
+npm run sitemap
+git add public/sitemap.xml

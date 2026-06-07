@@ -11,6 +11,8 @@
     "lint": "eslint",
     "format": "prettier",
     "check": "prettier --write . && eslint --fix",
+    "sitemap": "tsx --env-file=.env scripts/generate-sitemap.ts",
+    "prepare": "git config core.hooksPath .githooks",
     "deploy": "tsx src/lib/release-version-cli.ts && npm run build && wrangler deploy"
   },
   "dependencies": {
